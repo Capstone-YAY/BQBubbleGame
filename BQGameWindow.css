@@ -1,4 +1,4 @@
-//CSS file for the actual game window (not the login window)
+/*CSS file for the actual game window (not the login window)*/
 #container
 {
   body
@@ -6,10 +6,49 @@
     background-image: url("clouds1.png")
   }
   
-  p
-  { 
-    //note to self: change font + color to resemble actual game
-    font-family: "Courier New", sans-serif, serif;
-    color: aqua;
+  /*the following ID tags are for the bubbles that will be in the game window*/
+  #bubble1
+  {
+    font-family: "Droid Sans", arial, "sans serif";
+    color: rgb(0, 70, 183);
   }
+  
+  #bubble2
+  {
+    font-family: "Droid Sans", arial, "sans serif";
+    color: rgb(0, 70, 183);
+  }
+  
+  #bubble3
+  {
+    font-family: "Droid Sans", arial, "sans serif";
+    color: rgb(0, 70, 183);
+  }
+  
+  #bubble4
+  {
+    font-family: "Droid Sans", arial, "sans serif";
+    color: rgb(0, 70, 183);
+  }
+  
+  #bubble5
+  {
+    font-family: "Droid Sans", arial, "sans serif";
+    color: rgb(0, 70, 183);
+  }
+  
+  #bubble6
+  {
+    font-family: "Droid Sans", arial, "sans serif";
+    color: rgb(0, 70, 183);
+  }
+  
+  /*This is for the timer in the game*/
+  #timer
+  {
+    font-family: "Droid Sans", arial, "sans serif";
+    color: rgb(3, 63, 160);
+  }
+  
+  
 }
