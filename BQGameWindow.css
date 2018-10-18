@@ -1,10 +1,8 @@
 /*CSS file for the actual game window (not the login window)*/
-#container
+.container
 {
-  body
-  {
-    background-image: url("clouds1.png")
-  }
+    background-image: url('clouds1.png')
+}
   
   /*the following ID tags are for the bubbles that will be in the game window*/
   #bubble1
@@ -49,6 +47,3 @@
     font-family: "Droid Sans", arial, "sans serif";
     color: rgb(3, 63, 160);
   }
-  
-  
-}
