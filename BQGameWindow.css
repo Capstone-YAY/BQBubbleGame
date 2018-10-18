@@ -1,0 +1,14 @@
+//CSS file for the actual game window (not the login window)
+#container
+{
+  body
+  {
+    background-image: url("clouds1.png")
+  }
+  
+  p
+  { //note to self: change font + color to resemble actual game
+    font-family: "Courier New", sans-serif, serif;
+    color: aqua;
+  }
+}
