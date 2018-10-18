@@ -5,7 +5,7 @@ body{
 .container{
     width: 50%;
     height: 600px;
-    background-image: url('bub.jpg');
+    background-image: url('BQBubbles.jpg');
     opacity: 20%;
     background-repeat: no-repeat;
     background-size: cover;
@@ -17,8 +17,9 @@ body{
 }
 .overflow
 {
-	height: 200 px;
-	border: 1 px silver solid;
+    overflow: scroll;
+	max-height: 200px;
+	border: 1px silver solid;
 }
 div.options select
 {
@@ -75,8 +76,4 @@ fieldset {
 label {
     display: block;
     margin: 30px 0 0 0;
-}
-
-.overflow {
-    height: 200px;
 }
