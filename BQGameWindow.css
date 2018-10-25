@@ -4,6 +4,12 @@ body
   background: black;
 }
 
+#bubbleBoundary {
+  width: 50%;
+  height: 400px;
+}
+
+
 div.container{
   width: 50%;
   height: 600px;
