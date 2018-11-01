@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="jquery-style.css">
+  <link rel="stylesheet" href="BQStartWindow.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="verses.js"></script>
+    <script src="BQStartWindow.js"></script>
+
+</head>
+<body>
+ <div class="container">
+    <div class="bibleQ"> 
+      BQ <br> Bubble <br> Blast
+    </div><!--bibleQ div-->
+
+    <div class="options">
+        <!--<form action="#">-->
+        <!--<fieldset>-->
+        <!-- <div id="division">-->
+            <label for="division"> Select a division </label>
+            <select name="division" id="division">
+              <option selected="selected">Beginner</option>
+              <option>Junior</option>
+              <option>Int Sr</option>
+              <option>Exp Sr</option>
+            </select>
+        <!--</div>--><!--division div-->
+            <label for="start_verse"> Select a start verse </label>
+            <select name="start_verse" id="start_verse">
+                <option id="startEmptyOption" />
+            </select>
+        
+            <label for="end_verse"> Select an end verse </label>
+            <select name="end_verse" id="end_verse">
+                <option id="endEmptyOption" />
+            </select>
+        
+            <label for="num_of_questions"> Select a # of Questions </label>
+            <select name="num_of_questions" id="num_of_questions">
+                <option id="numEmptyOption" />
+            </select><br><br><br>
+          
+            <input class="button" type="submit" id="submitButton" value="Play">
+          <!--</fieldset>-->
+        
+        <!--</form>-->
+    </div><!--options div-->
+
+    <!--most likely going to be a form, for people to sign-in-->
+      <!--<form action="login.php" method="POST">-->
+        <div class="player">
+          Optional (Sign-in not required)
+          <br><br>
+          Username: <input type="text" name="username" size="15"/> 
+          <br><br>
+          Password: <input type="text" name="password" size="15"/> 
+          <br><br> 
+          *By signing in, your high scores <br>and performance will be saved
+        </div><!--login div-->
+      <!--</form>-->
+  </div><!--Container div-->
+</body>
+</html>
