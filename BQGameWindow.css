@@ -5,9 +5,19 @@ body
 }
 
 #bubbleBoundary {
+  margin-top: 20px;
+  margin-bottom: 30px;
+  height: 50%;
+  width: 100%;
   background-color: red;
-  /*width: 50%;*/
-  /*height: 400px;*/
+  object-fit: contain;
+}
+
+#bubbleArea {
+  /*height: 100%;*/
+  /*width: 100%;*/
+
+  background-color: green;
 }
 
 
