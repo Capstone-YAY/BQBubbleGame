@@ -18,8 +18,8 @@ var BubbleModule = {
 
     render: function() {
         // var ctx = (a canvas context);
-        $('#bubbleArea').css('width', $('container').width());
-        $('#bubbleArea').css('height', $('container').height());
+        $('#bubbleArea').css('width', $('#bubbleBoundary').width());
+        $('#bubbleArea').css('height', $('#bubbleBoundary').height());
 
         BubbleModule.areaWidth = ($('#bubbleArea').width());
         BubbleModule.areaHeight = ($('#bubbleArea').height());

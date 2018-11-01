@@ -5,8 +5,9 @@ body
 }
 
 #bubbleBoundary {
-  width: 50%;
-  height: 400px;
+  background-color: red;
+  /*width: 50%;*/
+  /*height: 400px;*/
 }
 
 
