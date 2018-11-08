@@ -7,7 +7,7 @@ body
 #bubbleBoundary {
   margin-top: 20px;
   margin-bottom: 30px;
-  height: 50%;
+  height: 80%;
   width: 100%;
   background-color: red;
   object-fit: contain;

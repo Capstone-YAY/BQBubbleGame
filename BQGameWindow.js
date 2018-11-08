@@ -1,4 +1,7 @@
 
+let mousex = undefined;
+let mousey = undefined;
+
 $( function() {
    console.log('loaded');
 
@@ -13,94 +16,138 @@ $( function() {
 
    $('body').ready(BubbleModule.render());
 
+
+
+
+
+
 });
 
 var BubbleModule = {
     areaWidth: null,
     areaHeight: null,
     context: null,
-    dx: 5,
-    dy: 5,
-    radius: 20,
-    b1_x: 30,
-    b1_y: 30,
-    b2_x: 90,
-    b2_y: 80,
-    b3_x: 30,
-    b3_y: 30,
+    bubbleArray: [],
+    bubbleCount: 2,
+    radius: 30,
 
     render: function() {
-
         //get what's there
         BubbleModule.context= bubbleArea.getContext('2d');
 
-        // BubbleModule.context.rect(0,0,500,500);
+        BubbleModule.bubbleArray.length = 0;
+        for (let i = 0; i < BubbleModule.bubbleCount; i++) {
+            const x = Math.random() * (BubbleModule.areaWidth - BubbleModule.radius  * 2) + BubbleModule.radius;
+            const y = Math.random() * (BubbleModule.areaHeight - BubbleModule.radius  * 2) + BubbleModule.radius;
+            const dx = (Math.random() - 0.5) * 2;
+            const dy = (Math.random() - 0.5) * 2;
 
-        //move the bubble every x ms
-        setInterval(BubbleModule.drawB1, 10);
-        setInterval(BubbleModule.drawB2, 10);
+            BubbleModule.bubbleArray.push(new Circle(x, y, dx, dy, BubbleModule.radius))
+        }
+
+        BubbleModule.animate();
     },
 
-    drawB1: function() {
+    animate: function() {
+        requestAnimationFrame(BubbleModule.animate);
 
-        //clear the specific pixels in the rectangle AKA get rid of the old bubble prior to moving it
-        BubbleModule.context.clearRect(BubbleModule.b1_x - BubbleModule.radius*2, BubbleModule.b1_y - BubbleModule.radius*2, BubbleModule.b1_x + BubbleModule.radius*2, BubbleModule.b1_y + BubbleModule.radius*2);
-        // begin a path AKA create the bubble object
-        BubbleModule.context.beginPath();
-        //set the bubble color
-        BubbleModule.context.fillStyle="blue";
-        //Draws a circle with radius at the coordinates x,y on the canvas
-        //arguments for reference: x, y, radius, start angle, end angle)
-        BubbleModule.context.arc(BubbleModule.b1_x, BubbleModule.b1_y, BubbleModule.radius, 0, Math.PI*2, true);
-        //create the path from the begin start to the end
-        BubbleModule.context.closePath();
-        // fill the bubble color
-        BubbleModule.context.fill();
+        BubbleModule.context.clearRect(0, 0, BubbleModule.areaWidth, BubbleModule.areaHeight);
 
-        //so the bubble doesn't exit on the x axis
-        if (BubbleModule.b1_x < BubbleModule.radius || BubbleModule.b1_x > (BubbleModule.areaWidth - BubbleModule.radius)) {
-            BubbleModule.dx = -BubbleModule.dx;
+        // window.addEventListener('click', (e) => {
+        //     mousex = e.pageX - $('#bubbleArea').position().left;
+        //     mousey = e.pageY - $('#bubbleArea').position().top;
+            // alert( (mousex) + ' , ' + (mousey));
+
+        // });
+
+        for (let i = 0; i < BubbleModule.bubbleArray.length; i++) {
+            BubbleModule.bubbleArray[i].update();
+
+            $('#bubbleArea').click(function(e){
+                var x = e.clientX, y = e.clientY;
+                if(Math.pow(x-50,2)+Math.pow(y-50,2) < Math.pow(50,2))
+                    console.log(BubbleModule.bubbleArray[i]);
+            })
         }
-
-        //so the bubble doesn't exit on the y axis
-        if (BubbleModule.b1_y  < BubbleModule.radius || BubbleModule.b1_y > (BubbleModule.areaHeight - BubbleModule.radius)) {
-            BubbleModule.dy = -BubbleModule.dy;
-        }
-
-        BubbleModule.b1_x += BubbleModule.dx;
-        BubbleModule.b1_y += BubbleModule.dy;
-
-    },
-
-    drawB2: function() {
-
-        //clear the specific pixels in the rectangle AKA get rid of the old bubble prior to moving it
-        BubbleModule.context.clearRect(BubbleModule.b2_x - BubbleModule.radius*2, BubbleModule.b2_y - BubbleModule.radius*2, BubbleModule.b2_x + BubbleModule.radius*2, BubbleModule.b2_y + BubbleModule.radius*2);
-        // begin a path AKA create the bubble object
-        BubbleModule.context.beginPath();
-        //set the bubble color
-        BubbleModule.context.fillStyle="red";
-        //Draws a circle with radius at the coordinates x,y on the canvas
-        //arguments for reference: x, y, radius, start angle, end angle)
-        BubbleModule.context.arc(BubbleModule.b2_x, BubbleModule.b2_y, BubbleModule.radius, 0, Math.PI*2, true);
-        //create the path from the begin start to the end
-        BubbleModule.context.closePath();
-        // fill the bubble color
-        BubbleModule.context.fill();
-
-        //so the bubble doesn't exit on the x axis
-        if (BubbleModule.b2_x < BubbleModule.radius || BubbleModule.b2_x > (BubbleModule.areaWidth - BubbleModule.radius)) {
-            BubbleModule.dx = -BubbleModule.dx;
-        }
-
-        //so the bubble doesn't exit on the y axis
-        if (BubbleModule.b2_y  < BubbleModule.radius || BubbleModule.b2_y > (BubbleModule.areaHeight - BubbleModule.radius)) {
-            BubbleModule.dy = -BubbleModule.dy;
-        }
-
-        BubbleModule.b2_x += BubbleModule.dx;
-        BubbleModule.b2_y += BubbleModule.dy;
 
     }
 
+
+};
+
+const Circle = function(x, y, dx, dy, radius) {
+    this.x = x;
+    this.y = y;
+    this.dx = dx;
+    this.dy = dy;
+    this.radius = radius;
+    this.minRadius = radius;
+    this.color = 'blue';
+
+    this.draw = function() {
+        BubbleModule.context.beginPath();
+        BubbleModule.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        BubbleModule.context.strokeStyle = this.color;
+        BubbleModule.context.stroke();
+        BubbleModule.context.fillStyle = this.color;
+        BubbleModule.context.fill()
+    };
+
+    this.update = function() {
+        //
+        // let distanceFromMouse = this.radius*2;
+        // let maxRadius = 50;
+        //
+        // if (mousex - this.x < distanceFromMouse && mousex - this.x > -distanceFromMouse && mousey - this.y < distanceFromMouse && mousey - this.y > -distanceFromMouse) {
+        //     // console.log(distanceFromMouse);
+        //     // console.log(mousex-this.x);
+        //     // console.log(this.x);
+        //
+        //     if (this.radius < maxRadius) {
+        //         console.log('a');
+        //         this.radius += 10
+        //
+        //     }
+        //     else {
+        //         if (this.radius > this.minRadius) {
+        //             console.log('b');
+        //             this.radius -= 10
+        //         }
+        //     }
+        // }
+        // else {
+        //         // console.log(distanceFromMouse);
+        //         // console.log(mousex-this.x);
+        //         // console.log(this.x);
+        //
+        // }
+
+        // window.addEventListener('click', function (e) {
+        //     let mousex = e.x;
+        //     let xMax = BubbleModule.bubbleArray[i].x + BubbleModule.radius;
+        //     let xMin = BubbleModule.bubbleArray[i].x - BubbleModule.radius;
+        //     let mousey = e.y;
+        //
+        //     // console.log(mousex);
+        //     // console.log(BubbleModule.bubbleArray[i].x);
+        //
+        //     if ((mousex >= xMin) && (mousex <= xMax))
+        //         console.log('bub');
+        //
+        // });
+
+
+        if (this.x + this.radius > BubbleModule.areaWidth || this.x - this.radius < 0) {
+            this.dx = -this.dx
+        }
+
+        if (this.y + this.radius > BubbleModule.areaHeight || this.y - this.radius < 0) {
+            this.dy = -this.dy
+        }
+
+        this.x += this.dx;
+        this.y += this.dy;
+
+        this.draw()
+    }
 };
