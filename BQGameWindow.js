@@ -28,7 +28,7 @@ var BubbleModule = {
     areaHeight: null,
     context: null,
     bubbleArray: [],
-    bubbleCount: 2,
+    bubbleCount: 6,
     radius: 30,
 
     render: function() {
