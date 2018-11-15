@@ -1,29 +1,43 @@
 <!DOCTYPE html>
 	<html lang = "en">
 		<head>
-			<link rel = "stylesheet" href = "style.css">
-		</head>
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<!--<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
+			 <!--<link rel="stylesheet" href="jquery-style.css">-->
+			 <link rel="stylesheet" href="BQScoreWindow.css">
+			<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+			<!--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
+			<script src="verses.js"></script>
+			<script src="BQScoreWindow.js"></script>
+		</head>	
 		
 		<body>
 			<div class = "container">
 				<p>Game Over! <button id = "playAgain"> Play Again </button></p> 
 				
-				<div id = "score">
+				<div class = "score">
+					YOUR SCORE IS: xxxx
 					<!-- This is to display the score; i.e., "[X] Correct, [Y] Missed" -->
 				</div>
-				<div id = "time">
+				<div class = "time">
+					Game Duration: xxxx seconds
 					<!-- This is to display the total time it took for the player to complete all of the questions -->
 				</div>
-				<div id = "verses">
+				<div class = "verses">
+					You had two verses correct
 					<!-- This is for displaying all of the verses missed by the player, if any -->
 				</div>
-				<div id = "rank">
+				<div class = "rank">
+					You are ranked at
 					<!-- This shows the rank of the player, i.e. "You are rank [x] out of [y] total games played." -->
 				</div>
 				<div id = "ovScores">
+					Over All Score
 					<!-- This shows the overall best scores of everyone who has created an account -->
 				</div>
-				<div id = "bestScores">
+				<div class = "bestScores">
+					Best Scores:
 					<!-- This shows the player's best scores -->
 				</div>
 				
