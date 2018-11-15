@@ -14,31 +14,31 @@
 		
 		<body>
 			<div class = "container">
-				<p>Game Over! <button id = "playAgain"> Play Again </button></p> 
+				<p id = "gameOver">Game Over! <button id = "playAgain"> Play Again! </button></p> 
 				
 				<div class = "score">
-					YOUR SCORE IS: xxxx
+					[X] Verses Correct, [Y] Missed
 					<!-- This is to display the score; i.e., "[X] Correct, [Y] Missed" -->
 				</div>
 				<div class = "time">
 					Game Duration: xxxx seconds
 					<!-- This is to display the total time it took for the player to complete all of the questions -->
 				</div>
-				<div class = "verses">
-					You had two verses correct
-					<!-- This is for displaying all of the verses missed by the player, if any -->
-				</div>
 				<div class = "rank">
-					You are ranked at
+					You are ranked x out of x total games played.
 					<!-- This shows the rank of the player, i.e. "You are rank [x] out of [y] total games played." -->
 				</div>
-				<div id = "ovScores">
-					Over All Score
+				<div class = "ovScores">
+					Overall Score:
 					<!-- This shows the overall best scores of everyone who has created an account -->
 				</div>
 				<div class = "bestScores">
 					Best Scores:
 					<!-- This shows the player's best scores -->
+				</div>
+				<div class = "missed">
+					Verses Missed:
+					<!-- This shows what verses the player got wrong -->
 				</div>
 				
 			</div>
