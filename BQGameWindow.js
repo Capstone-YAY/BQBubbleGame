@@ -36,11 +36,21 @@ var BubbleModule = {
         BubbleModule.context= bubbleArea.getContext('2d');
 
         BubbleModule.bubbleArray.length = 0;
+
         for (let i = 0; i < BubbleModule.bubbleCount; i++) {
-            const x = Math.random() * (BubbleModule.areaWidth - BubbleModule.radius  * 2) + BubbleModule.radius;
-            const y = Math.random() * (BubbleModule.areaHeight - BubbleModule.radius  * 2) + BubbleModule.radius;
-            const dx = (Math.random() - 0.5) * 2;
-            const dy = (Math.random() - 0.5) * 2;
+            var x = Math.random() * (BubbleModule.areaWidth - BubbleModule.radius  * 2) + BubbleModule.radius;
+            var y = Math.random() * (BubbleModule.areaHeight - BubbleModule.radius  * 2) + BubbleModule.radius;
+            const dx = (Math.random() - 1.5) * 2;
+            const dy = (Math.random() - 1.5) * 2;
+
+            $.each(BubbleModule.bubbleArray, function (index, bubble) {
+                while (bubble['x'] == x) {
+                    var x = Math.random() * (BubbleModule.areaWidth - BubbleModule.radius * 2) + BubbleModule.radius;
+                }
+                while (bubble['y'] == y) {
+                    var y = Math.random() * (BubbleModule.areaHeight - BubbleModule.radius  * 2) + BubbleModule.radius;
+                }
+            });
 
             BubbleModule.bubbleArray.push(new Circle(x, y, dx, dy, BubbleModule.radius))
         }
@@ -63,12 +73,18 @@ var BubbleModule = {
         for (let i = 0; i < BubbleModule.bubbleArray.length; i++) {
             BubbleModule.bubbleArray[i].update();
 
-            $('#bubbleArea').click(function(e){
-                var x = e.clientX, y = e.clientY;
-                if(Math.pow(x-50,2)+Math.pow(y-50,2) < Math.pow(50,2))
-                    console.log(BubbleModule.bubbleArray[i]);
-            })
+
+            // $('#bubbleArea').click(function(e){
+            //     var x = e.clientX, y = e.clientY;
+            //     if(Math.pow(x-50,2)+Math.pow(y-50,2) < Math.pow(50,2))
+            //         console.log(BubbleModule.bubbleArray[i]);
+            // })
         }
+
+        // BubbleModule.testCollision();
+    },
+
+    testCollision: function() {
 
     }
 
@@ -90,7 +106,8 @@ const Circle = function(x, y, dx, dy, radius) {
         BubbleModule.context.strokeStyle = this.color;
         BubbleModule.context.stroke();
         BubbleModule.context.fillStyle = this.color;
-        BubbleModule.context.fill()
+        BubbleModule.context.fill();
+
     };
 
     this.update = function() {
@@ -137,16 +154,62 @@ const Circle = function(x, y, dx, dy, radius) {
         // });
 
 
-        if (this.x + this.radius > BubbleModule.areaWidth || this.x - this.radius < 0) {
-            this.dx = -this.dx
+        var col = false;
+
+        var thisX = parseInt(this.x);
+        var thisY = parseInt(this.y);
+
+        $.each(BubbleModule.bubbleArray, function(index, bubble) {
+            var x = parseInt(bubble['x']);
+            var y = parseInt(bubble['y']);
+            if ( (thisX !== x ) && ( thisY !== y ) ) {
+                if (Math.sqrt( (thisX-x) * (thisX-x) + (thisY-y) * (thisY-y) ) < (BubbleModule.radius*2) ) {
+                    col = true;
+                    // if ( (Math.abs(thisX - x) < (BubbleModule.radius*2) ) && ( Math.abs(thisY - y) < (BubbleModule.radius*2) ) ) {
+                    console.log('col');
+
+                    this.dx *= (-1);
+                    this.dy *= (-1);
+
+                    //to keep within window
+                    if (this.x + this.radius > BubbleModule.areaWidth || this.x - this.radius < 0) {
+                        this.x -= this.dx;
+                    }
+
+                    if ( this.y + this.radius > BubbleModule.areaHeight || this.y - this.radius < 0) {
+                        this.y -= this.dy;
+                    }
+
+                    this.x += this.dx;
+                    this.y += this.dy;
+                    //to keep within window
+
+
+
+
+                }
+            }
+        });
+
+
+        if (col == false) {
+            if (this.x + this.radius > BubbleModule.areaWidth || this.x - this.radius < 0) {
+                this.dx = -this.dx
+            }
+
+            if (this.y + this.radius > BubbleModule.areaHeight || this.y - this.radius < 0) {
+                this.dy = -this.dy
+            }
+
+            this.x += this.dx;
+            this.y += this.dy;
+
         }
 
-        if (this.y + this.radius > BubbleModule.areaHeight || this.y - this.radius < 0) {
-            this.dy = -this.dy
-        }
 
-        this.x += this.dx;
-        this.y += this.dy;
+
+
+
 
         this.draw()
     }
