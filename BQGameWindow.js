@@ -1,92 +1,135 @@
-
-let mousex = undefined;
-let mousey = undefined;
+//BQGameWindow.js
 
 $( function() {
    console.log('loaded');
 
+   //set the bubble area's width and height equivalent to that of the page
    $('#bubbleArea').attr('width', $('#bubbleBoundary').width());
    $('#bubbleArea').attr('height', $('#bubbleBoundary').height());
 
+    //set the height and width variables so we know how large the bubble area is
    BubbleModule.areaWidth = ($('#bubbleArea').width());
    BubbleModule.areaHeight = ($('#bubbleArea').height());
 
-   console.log(BubbleModule.areaHeight);
-   console.log(BubbleModule.areaWidth);
-
+   //once the body is loaded render the bubbles
    $('body').ready(BubbleModule.render());
 
 
+   //if the bubble area is clicked
+   $('#bubbleArea').on('click', function(e) {
+       //get the click location relative to parent's mouse position
+       var posX = $(this).position().left;
+       var posY = $(this).position().top;
 
+       //get mouse x and y according to page so it matches the bubble's x and y ranges
+       var mouseX = e.pageX - posX;
+       var mouseY = e.pageY - posY;
 
+       //check if there's a bubble at mouseX and mouseY
+       BubbleModule.checkBubbleLocations(mouseX, mouseY);
+   });
 
 
 });
 
+
 var BubbleModule = {
+    //width of the bubble area
     areaWidth: null,
+    //height of the bubble area
     areaHeight: null,
+    //canvas 2d content
     context: null,
+    //array of Circle objects aka bubbles
     bubbleArray: [],
+    //total number of bubbles
     bubbleCount: 6,
+    //radius for bubbles
     radius: 30,
 
+    //renders the bubbles
     render: function() {
         //get what's there
         BubbleModule.context= bubbleArea.getContext('2d');
 
+        //reset the bubbleArray length to zero for safety
         BubbleModule.bubbleArray.length = 0;
 
+        //create each bubble using the Circle object
         for (let i = 0; i < BubbleModule.bubbleCount; i++) {
+            //randomize the x and y being sure they're within the available area and that no part of the bubble will be outside it
             var x = Math.random() * (BubbleModule.areaWidth - BubbleModule.radius  * 2) + BubbleModule.radius;
             var y = Math.random() * (BubbleModule.areaHeight - BubbleModule.radius  * 2) + BubbleModule.radius;
+
+            //randomize the direction the bubble will move (both x and y)
             const dx = (Math.random() - 1.5) * 2;
             const dy = (Math.random() - 1.5) * 2;
 
-            $.each(BubbleModule.bubbleArray, function (index, bubble) {
-                while (bubble['x'] == x) {
-                    var x = Math.random() * (BubbleModule.areaWidth - BubbleModule.radius * 2) + BubbleModule.radius;
-                }
-                while (bubble['y'] == y) {
-                    var y = Math.random() * (BubbleModule.areaHeight - BubbleModule.radius  * 2) + BubbleModule.radius;
-                }
-            });
+            //@todo confirm bubbles will never overlap on creation
 
+            //create the Circle with the randomized variables
             BubbleModule.bubbleArray.push(new Circle(x, y, dx, dy, BubbleModule.radius))
         }
 
+        //start the page animation
         BubbleModule.animate();
     },
 
+    //start the page animation
     animate: function() {
+        //recursively call the animation
         requestAnimationFrame(BubbleModule.animate);
 
+        //erase the bubbles drawn
         BubbleModule.context.clearRect(0, 0, BubbleModule.areaWidth, BubbleModule.areaHeight);
 
-        // window.addEventListener('click', (e) => {
-        //     mousex = e.pageX - $('#bubbleArea').position().left;
-        //     mousey = e.pageY - $('#bubbleArea').position().top;
-            // alert( (mousex) + ' , ' + (mousey));
-
-        // });
-
+        //redraw each bubble using the update function
         for (let i = 0; i < BubbleModule.bubbleArray.length; i++) {
             BubbleModule.bubbleArray[i].update();
 
-
-            // $('#bubbleArea').click(function(e){
-            //     var x = e.clientX, y = e.clientY;
-            //     if(Math.pow(x-50,2)+Math.pow(y-50,2) < Math.pow(50,2))
-            //         console.log(BubbleModule.bubbleArray[i]);
-            // })
         }
 
-        // BubbleModule.testCollision();
     },
 
-    testCollision: function() {
+    //check if mouseX and mouseY are within x and y ranges of any bubble
+    checkBubbleLocations: function(mouseX, mouseY) {
+        console.log('mouse x: ' + mouseX);
+        console.log('mouse y: ' + mouseY);
 
+        //check each bubble against mouseX and mouseY
+        $.each(BubbleModule.bubbleArray, function(index, bubble) {
+            var x = parseInt(bubble['x']);
+            var y = parseInt(bubble['y']);
+            var rad = parseInt(bubble['radius']);
+            var xMin = x-rad;
+            var xMax = x+rad;
+            var yMin = y-rad;
+            var yMax = y+rad;
+
+            //if the mouseX and mouseY are between their corresponding x and y then a bubble was clicked
+            if ( (mouseX > xMin && mouseX < xMax) && (mouseY > yMin && mouseY < yMax) ) {
+                console.log('bubble ' + index + ' was clicked');
+                console.log('bubble ' + index + ' x range: ' + xMin + ' - ' + xMax);
+                console.log('bubble ' + index + ' y range: ' + yMin + ' - ' + yMax);
+
+                //deal with the bubble being clicked
+                BubbleModule.bubbleClicked(index);
+            }
+
+        });
+
+    },
+
+    //@todo implement what happens to the bubble after it's clicked
+    bubbleClicked: function(clickedBubbleIndex) {
+        console.log(BubbleModule.bubbleArray[clickedBubbleIndex]);
+
+        //remove the bubble from the array
+        BubbleModule.bubbleArray.splice(clickedBubbleIndex, 1);
+        //update the number of bubbles to account for the one being removed
+        BubbleModule.bubbleCount--;
     }
+
 
 
 };
@@ -94,12 +137,17 @@ var BubbleModule = {
 const Circle = function(x, y, dx, dy, radius) {
     this.x = x;
     this.y = y;
+
+    //direction of movement for x
     this.dx = dx;
+    //direction of movement for y
     this.dy = dy;
+    //bubble radius passed to function (should always be BubbleModule.radius)
     this.radius = radius;
-    this.minRadius = radius;
+    //bubble fill color
     this.color = 'blue';
 
+    //draw the bubble on the canvas
     this.draw = function() {
         BubbleModule.context.beginPath();
         BubbleModule.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
@@ -107,110 +155,73 @@ const Circle = function(x, y, dx, dy, radius) {
         BubbleModule.context.stroke();
         BubbleModule.context.fillStyle = this.color;
         BubbleModule.context.fill();
-
     };
 
+    //update the x and y then check for collisions before redrawing
     this.update = function() {
-        //
-        // let distanceFromMouse = this.radius*2;
-        // let maxRadius = 50;
-        //
-        // if (mousex - this.x < distanceFromMouse && mousex - this.x > -distanceFromMouse && mousey - this.y < distanceFromMouse && mousey - this.y > -distanceFromMouse) {
-        //     // console.log(distanceFromMouse);
-        //     // console.log(mousex-this.x);
-        //     // console.log(this.x);
-        //
-        //     if (this.radius < maxRadius) {
-        //         console.log('a');
-        //         this.radius += 10
-        //
-        //     }
-        //     else {
-        //         if (this.radius > this.minRadius) {
-        //             console.log('b');
-        //             this.radius -= 10
-        //         }
-        //     }
-        // }
-        // else {
-        //         // console.log(distanceFromMouse);
-        //         // console.log(mousex-this.x);
-        //         // console.log(this.x);
-        //
-        // }
 
-        // window.addEventListener('click', function (e) {
-        //     let mousex = e.x;
-        //     let xMax = BubbleModule.bubbleArray[i].x + BubbleModule.radius;
-        //     let xMin = BubbleModule.bubbleArray[i].x - BubbleModule.radius;
-        //     let mousey = e.y;
-        //
-        //     // console.log(mousex);
-        //     // console.log(BubbleModule.bubbleArray[i].x);
-        //
-        //     if ((mousex >= xMin) && (mousex <= xMax))
-        //         console.log('bub');
-        //
-        // });
-
-
+        //flag if there's a collision
         var col = false;
 
+        //force x and y variables (of the current bubble) to be treated as integers for comparisons
         var thisX = parseInt(this.x);
         var thisY = parseInt(this.y);
 
+        //foreach bubble update the x and y then check for collisions
         $.each(BubbleModule.bubbleArray, function(index, bubble) {
+            //force x and y variables (of the bubble from the bubbleArray) to be treated as integers for comparisons
             var x = parseInt(bubble['x']);
             var y = parseInt(bubble['y']);
-            if ( (thisX !== x ) && ( thisY !== y ) ) {
-                if (Math.sqrt( (thisX-x) * (thisX-x) + (thisY-y) * (thisY-y) ) < (BubbleModule.radius*2) ) {
-                    col = true;
-                    // if ( (Math.abs(thisX - x) < (BubbleModule.radius*2) ) && ( Math.abs(thisY - y) < (BubbleModule.radius*2) ) ) {
-                    console.log('col');
 
+            //if the x and y of the two bubbles being compared aren't equal
+            if ( (thisX !== x ) && ( thisY !== y ) ) {
+
+                //if both x and y are inside the range the bubble will span (radius * 2) = there will be a collision
+                if (Math.sqrt( (thisX-x) * (thisX-x) + (thisY-y) * (thisY-y) ) < (BubbleModule.radius*2) ) {
+                    //mark the collision
+                    col = true;
+
+                    //force the current bubble to reverse both x and y directions
                     this.dx *= (-1);
                     this.dy *= (-1);
 
-                    //to keep within window
+                    //be sure to keep that bubble within the window size
                     if (this.x + this.radius > BubbleModule.areaWidth || this.x - this.radius < 0) {
                         this.x -= this.dx;
                     }
-
                     if ( this.y + this.radius > BubbleModule.areaHeight || this.y - this.radius < 0) {
                         this.y -= this.dy;
                     }
 
+                    //change the current bubble's x and y to avoid the collision
                     this.x += this.dx;
                     this.y += this.dy;
-                    //to keep within window
-
-
 
 
                 }
             }
         });
 
-
+        //if there's no collision
         if (col == false) {
+            //if the next x movement will put the bubble outside the window reverse direction
             if (this.x + this.radius > BubbleModule.areaWidth || this.x - this.radius < 0) {
-                this.dx = -this.dx
+                this.dx = -this.dx;
             }
 
+            //if the next y movement will put the bubble outside the window reverse direction
             if (this.y + this.radius > BubbleModule.areaHeight || this.y - this.radius < 0) {
-                this.dy = -this.dy
+                this.dy = -this.dy;
             }
 
+            //change the current bubble's x and y to move it
             this.x += this.dx;
             this.y += this.dy;
 
         }
 
 
-
-
-
-
-        this.draw()
+        //redraw the current bubble to it's new location
+        this.draw();
     }
 };
