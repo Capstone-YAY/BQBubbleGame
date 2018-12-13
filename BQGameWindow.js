@@ -56,25 +56,80 @@ var BubbleModule = {
         //reset the bubbleArray length to zero for safety
         BubbleModule.bubbleArray.length = 0;
 
+        //holds the x and y values for the already created bubbles
+        //used for collision checking on page load
+        var xArray = [];
+        var yArray = [];
+        var rad = parseInt(BubbleModule.radius);
+        var buffer = 2;
+
         //create each bubble using the Circle object
         for (let i = 0; i < BubbleModule.bubbleCount; i++) {
             //randomize the x and y being sure they're within the available area and that no part of the bubble will be outside it
-            var coord = BubbleModule.getNewXAndY();
-            var x = coord['x'];
-            var y = coord['y'];
+            var x = BubbleModule.getNewX();
+            var y = BubbleModule.getNewY();
 
             //randomize the direction the bubble will move (both x and y)
             var dx = (Math.random() - 1.5) * 2;
             var dy = (Math.random() - 1.5) * 2;
 
-            var col = false;
-            col = BubbleModule.checkForCollisions(x, y);
-            if (col != false) {
-                console.log('f');
 
-                //@todo confirm bubbles will never overlap on creation
-                // col = BubbleModule.checkForCollisions(x, y);
+            if (xArray.length > 0) {
+                console.log(xArray.length);
+                //@todo check for collisions within xArray
+                for (let i = 0; i < xArray.length; i++) {
+                    if (x > xArray[i]-rad && x < xArray[i]+rad) {
+                        x = BubbleModule.getNewX();
+                    }
+
+                }
+
+                xArray.push(x);
             }
+            else {
+                xArray.push(x);
+            }
+
+            var colY = false;
+
+            if (yArray.length > 0) {
+                console.log(yArray.length);
+                //@todo check for collisions within yArray
+                // while (colY == true) {
+                    for (let i = 0; i < yArray.length; i++) {
+                        if (y > yArray[i]-rad && y < yArray[i]+rad) {
+                            y = BubbleModule.getNewY();
+                            colY = true;
+                        }
+                    }
+                // }
+
+
+                yArray.push(y);
+            }
+            else {
+                yArray.push(y);
+            }
+
+
+
+            // for (let i = 0; i < BubbleModule.bubbleArray.length; i++) {
+            //     var checkX = parseInt(BubbleModule.bubbleArray[i]['x']);
+            //     var checkY = parseInt(BubbleModule.bubbleArray[i]['y']);
+            //
+            //     while ( x > (checkX-rad+buffer) && x < (checkX+rad-buffer) ) {
+            //         x = BubbleModule.getNewX();
+            //     }
+            //     while ( y > (checkY-rad+buffer) && y < (checkY+rad-buffer) ) {
+            //         y = BubbleModule.getNewY();
+            //     }
+            //
+            //     console.log('x range: ' + (checkX-rad+buffer) + ' to ' + (checkX+rad-buffer));
+            //     console.log('y range: ' + (checkY-rad+buffer) + ' to ' + (checkY+rad-buffer));
+            //     console.log(x + ', ' + y);
+            //
+            // }
+
 
             //create the Circle with the randomized variables
             BubbleModule.bubbleArray.push(new Circle(x, y, dx, dy, BubbleModule.radius))
@@ -84,14 +139,17 @@ var BubbleModule = {
         BubbleModule.animate();
     },
 
-    getNewXAndY: function () {
-        var x = Math.random() * (BubbleModule.areaWidth - BubbleModule.radius  * 2) + BubbleModule.radius;
+    getNewX: function () {
+        var x = Math.random() * (BubbleModule.areaWidth - BubbleModule.radius * 2) + BubbleModule.radius;
+
+
+        return parseInt(x);
+    },
+
+    getNewY: function () {
         var y = Math.random() * (BubbleModule.areaHeight - BubbleModule.radius  * 2) + BubbleModule.radius;
 
-        return {
-            x: x,
-            y: y
-        };
+        return parseInt(y);
     },
 
     //start the page animation
