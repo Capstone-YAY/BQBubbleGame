@@ -44,9 +44,12 @@ var BubbleModule = {
     //array of Circle objects aka bubbles
     bubbleArray: [],
     //total number of bubbles
-    bubbleCount: 6,
+    bubbleCount: 20,
     //radius for bubbles
-    radius: 50,
+    radius: 30,
+    quadXCount: null,
+    quadYCount: null,
+    availCoords: [],
 
     //renders the bubbles
     render: function() {
@@ -56,12 +59,8 @@ var BubbleModule = {
         //reset the bubbleArray length to zero for safety
         BubbleModule.bubbleArray.length = 0;
 
-        //holds the x and y values for the already created bubbles
-        //used for collision checking on page load
-        var xArray = [];
-        var yArray = [];
-        var rad = parseInt(BubbleModule.radius);
-        var buffer = 2;
+        console.log(BubbleModule.areaWidth);
+
 
         //create each bubble using the Circle object
         for (let i = 0; i < BubbleModule.bubbleCount; i++) {
@@ -69,74 +68,74 @@ var BubbleModule = {
             var x = BubbleModule.getNewX();
             var y = BubbleModule.getNewY();
 
+            BubbleModule.getNewCoords();
+
+
             //randomize the direction the bubble will move (both x and y)
-            var dx = (Math.random() - 1.5) * 2;
-            var dy = (Math.random() - 1.5) * 2;
+            var dx = parseInt( (Math.random() - 4) * 2);
+            var dy = parseInt( (Math.random() - 4) * 2);
 
-
-            if (xArray.length > 0) {
-                console.log(xArray.length);
-                //@todo check for collisions within xArray
-                for (let i = 0; i < xArray.length; i++) {
-                    if (x > xArray[i]-rad && x < xArray[i]+rad) {
-                        x = BubbleModule.getNewX();
-                    }
-
-                }
-
-                xArray.push(x);
-            }
-            else {
-                xArray.push(x);
-            }
-
-            var colY = false;
-
-            if (yArray.length > 0) {
-                console.log(yArray.length);
-                //@todo check for collisions within yArray
-                // while (colY == true) {
-                    for (let i = 0; i < yArray.length; i++) {
-                        if (y > yArray[i]-rad && y < yArray[i]+rad) {
-                            y = BubbleModule.getNewY();
-                            colY = true;
-                        }
-                    }
-                // }
-
-
-                yArray.push(y);
-            }
-            else {
-                yArray.push(y);
-            }
-
-
-
-            // for (let i = 0; i < BubbleModule.bubbleArray.length; i++) {
-            //     var checkX = parseInt(BubbleModule.bubbleArray[i]['x']);
-            //     var checkY = parseInt(BubbleModule.bubbleArray[i]['y']);
-            //
-            //     while ( x > (checkX-rad+buffer) && x < (checkX+rad-buffer) ) {
-            //         x = BubbleModule.getNewX();
-            //     }
-            //     while ( y > (checkY-rad+buffer) && y < (checkY+rad-buffer) ) {
-            //         y = BubbleModule.getNewY();
-            //     }
-            //
-            //     console.log('x range: ' + (checkX-rad+buffer) + ' to ' + (checkX+rad-buffer));
-            //     console.log('y range: ' + (checkY-rad+buffer) + ' to ' + (checkY+rad-buffer));
-            //     console.log(x + ', ' + y);
-            //
-            // }
-
+            // console.log(x + ", " + y);
+            // console.log(dx + ' - ' + dy);
 
             //create the Circle with the randomized variables
             BubbleModule.bubbleArray.push(new Circle(x, y, dx, dy, BubbleModule.radius))
         }
 
+
+
         //start the page animation
         BubbleModule.animate();
+    },
+
+    getNewCoords: function () {
+        BubbleModule.quadXCount = parseInt(Math.ceil(BubbleModule.areaWidth/BubbleModule.radius)) - 5;
+        BubbleModule.quadYCount = parseInt(Math.ceil(BubbleModule.areaHeight/BubbleModule.radius)) - 5;
+
+        console.log(BubbleModule.quadXCount);
+        console.log(BubbleModule.quadYCount);
+
+        var quads = null;
+
+        if (BubbleModule.quadXCount >= BubbleModule.quadYCount) {
+            //@todo create an array of quads with min and max for both x and y
+            quads = BubbleModule.quadYCount;
+        }
+        else {
+            quads = BubbleModule.quadXCount;
+        }
+
+        //@todo fill in array with possible spawn locations
+        for (var i = 0; i < quads; i++) {
+            //@todo find x coord within quadX[1]
+            //Math.floor(Math.random()*(max-min+1)+min)
+
+            // var x =
+
+
+            //@todo find y coord within quadY[1]
+            // var y = 0;
+
+            // BubbleModule.availCoords.push({
+            //     x: x,
+            //     y: y
+            // })
+        }
+
+        // var incX = parseInt(Math.ceil(BubbleModule.areaWidth/BubbleModule.bubbleCount)) + 2;
+        // var last = BubbleModule.radius + 1;
+        // for (var i = 0; i < BubbleModule.bubbleCount; i++) {
+        //     BubbleModule.xOptions.push(last);
+        //     if (last + incX + BubbleModule.radius >= BubbleModule.areaWidth) {
+        //         @todo move back to starting x with next available y
+        //
+        //     }
+        //     else {
+        //         last = last + incX;
+        //     }
+
+        // }
+
     },
 
     getNewX: function () {
@@ -209,8 +208,8 @@ var BubbleModule = {
         //foreach bubble update the x and y then check for collisions
         $.each(BubbleModule.bubbleArray, function(index, bubble) {
             //force x and y variables (of the bubble from the bubbleArray) to be treated as integers for comparisons
-            var x = parseInt(bubble['x']);
-            var y = parseInt(bubble['y']);
+            var x = bubble['x'];
+            var y = bubble['y'];
 
             //if the x and y of the two bubbles being compared aren't equal
             if ( (thisX !== x ) && ( thisY !== y ) ) {
@@ -241,6 +240,8 @@ var BubbleModule = {
 
         return false;
     }
+
+
 
 
 };
@@ -275,28 +276,32 @@ const Circle = function(x, y, dx, dy, radius) {
         var col = false;
 
         //force x and y variables (of the current bubble) to be treated as integers for comparisons
-        var thisX = parseInt(this.x);
-        var thisY = parseInt(this.y);
+        var thisX = this.x;
+        var thisY = this.y;
 
         col = BubbleModule.checkForCollisions(thisX, thisY);
 
-        //if there's no collision
-        if (col == false) {
-            //if the next x movement will put the bubble outside the window reverse direction
-            if (this.x + this.radius > BubbleModule.areaWidth || this.x - this.radius < 0) {
-                this.dx = -this.dx;
-            }
-
-            //if the next y movement will put the bubble outside the window reverse direction
-            if (this.y + this.radius > BubbleModule.areaHeight || this.y - this.radius < 0) {
-                this.dy = -this.dy;
-            }
-
-            //change the current bubble's x and y to move it
-            this.x += this.dx;
-            this.y += this.dy;
-
+        //if there's a collision reverse this bubble too
+        if (col == true) {
+            //force the current bubble to reverse both x and y directions
+            this.dx *= (-1);
+            this.dy *= (-1);
         }
+
+
+        //if the next x movement will put the bubble outside the window reverse direction
+        if (this.x + this.radius > BubbleModule.areaWidth || this.x - this.radius < 0) {
+            this.dx = -this.dx;
+        }
+
+        //if the next y movement will put the bubble outside the window reverse direction
+        if (this.y + this.radius > BubbleModule.areaHeight || this.y - this.radius < 0) {
+            this.dy = -this.dy;
+        }
+
+        //change the current bubble's x and y to move it
+        this.x += this.dx;
+        this.y += this.dy;
 
 
         //redraw the current bubble to it's new location
