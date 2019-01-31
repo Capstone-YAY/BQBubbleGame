@@ -11,6 +11,7 @@ $( function() {
    BubbleModule.areaWidth = ($('#bubbleArea').width());
    BubbleModule.areaHeight = ($('#bubbleArea').height());
 
+
    //once the body is loaded render the bubbles
    $('body').ready(BubbleModule.render());
 
@@ -44,12 +45,13 @@ var BubbleModule = {
     //array of Circle objects aka bubbles
     bubbleArray: [],
     //total number of bubbles
-    bubbleCount: 20,
+    bubbleCount: 2,
     //radius for bubbles
-    radius: 30,
-    quadXCount: null,
-    quadYCount: null,
-    availCoords: [],
+    radius: 45,
+
+    usedCoords: [],
+    firstLoad: true,
+    quads: null,
 
     //renders the bubbles
     render: function() {
@@ -59,27 +61,90 @@ var BubbleModule = {
         //reset the bubbleArray length to zero for safety
         BubbleModule.bubbleArray.length = 0;
 
-        console.log(BubbleModule.areaWidth);
+        // BubbleModule.setupQuads();
+
+        var maxAttempts = BubbleModule.bubbleCount*10;
+        var available = true;
+        var points = [];
+
+        while((points.length <= BubbleModule.bubbleCount) && maxAttempts > 0) {
+            var coords = BubbleModule.getNewCoords();
+            // console.log(coords);
+            var x = coords.x;
+            var y = coords.y;
+
+            var buf = 5;
+
+            // for (let point in points) {
+                $.each(points, function (i, point) {
 
 
-        //create each bubble using the Circle object
+                // if ( (point.x !== x ) && ( point.y !== y ) ) {
+
+                console.log(point.x);
+                // console.log(BubbleModule.radius);
+                // console.log(buf);
+                var xMin = point.x-BubbleModule.radius-buf;
+                var xMax = point.x+BubbleModule.radius+buf;
+                var yMin = point.y-BubbleModule.radius-buf;
+                var yMax = point.y+BubbleModule.radius+buf;
+
+                console.log('x: ' + xMin + ' - ' + xMax);
+                console.log('y: ' + yMin + ' - ' + yMax);
+
+                if ( (x > xMax && y > yMax) || (x < xMin && y < yMin) ) {
+                    // if (Math.sqrt( (point.x-x) * (point.x-x) + (point.y-y) * (point.y-y) ) < (BubbleModule.radius*2) ) {
+                        available = false;
+                    // }
+                }
+                // if (Math.abs(point.x-x) < BubbleModule.bubbleCount &&
+                //     Math.abs(point.y-y) < BubbleModule.bubbleCount) {
+                //
+                // }
+            // }
+                });
+
+            if (available) {
+                points.push({
+                    x: x,
+                    y: y
+                });
+
+            }
+
+            available = true;
+            maxAttempts -= 1;
+
+
+        }
+
+        console.log(points);
+
+        // //create each bubble using the Circle object
         for (let i = 0; i < BubbleModule.bubbleCount; i++) {
-            //randomize the x and y being sure they're within the available area and that no part of the bubble will be outside it
-            var x = BubbleModule.getNewX();
-            var y = BubbleModule.getNewY();
+        //     //randomize the x and y being sure they're within the available area and that no part of the bubble will be outside it
+        //     // var x = BubbleModule.getRandX();
+        //     // var y = BubbleModule.getRandY();
+        //var coords = BubbleModule.getNewCoords();
+            var Bcoords = points[i];
+            console.log(Bcoords);
+            var Bx = Bcoords.x;
+            var By = Bcoords.y;
+        //
 
-            BubbleModule.getNewCoords();
-
-
-            //randomize the direction the bubble will move (both x and y)
-            var dx = parseInt( (Math.random() - 4) * 2);
-            var dy = parseInt( (Math.random() - 4) * 2);
-
-            // console.log(x + ", " + y);
-            // console.log(dx + ' - ' + dy);
-
-            //create the Circle with the randomized variables
-            BubbleModule.bubbleArray.push(new Circle(x, y, dx, dy, BubbleModule.radius))
+        //     // var x = coords.x;
+        //     // var y = coords.y;
+        //
+        //
+        //     //randomize the direction the bubble will move (both x and y)
+            var dx = parseInt( (Math.random() - 2) * 2);
+            var dy = parseInt( (Math.random() - 2) * 2);
+        //
+        //     // console.log(x + ", " + y);
+        //     // console.log(dx + ' - ' + dy);
+        //
+        //     //create the Circle with the randomized variables
+            BubbleModule.bubbleArray.push(new Circle(Bx, By, dx, dy, BubbleModule.radius))
         }
 
 
@@ -88,67 +153,137 @@ var BubbleModule = {
         BubbleModule.animate();
     },
 
-    getNewCoords: function () {
-        BubbleModule.quadXCount = parseInt(Math.ceil(BubbleModule.areaWidth/BubbleModule.radius)) - 5;
-        BubbleModule.quadYCount = parseInt(Math.ceil(BubbleModule.areaHeight/BubbleModule.radius)) - 5;
 
-        console.log(BubbleModule.quadXCount);
-        console.log(BubbleModule.quadYCount);
 
-        var quads = null;
+    setupQuads: function () {
+        //total number of quadrants - max number of bubbles technically
+        var totalQuadsX = null;
+        var totalQuadsY = null;
+        //size of each quadrant
+        var quadIncX = null;
+        var quadIncY = null;
 
-        if (BubbleModule.quadXCount >= BubbleModule.quadYCount) {
-            //@todo create an array of quads with min and max for both x and y
-            quads = BubbleModule.quadYCount;
+        //holds min/max for each quadrant
+        BubbleModule.quads = [];
+
+        var max = null;
+
+        if (BubbleModule.areaWidth >= BubbleModule.areaHeight) {
+            console.log(BubbleModule.areaHeight);
+            max = 'height';
         }
         else {
-            quads = BubbleModule.quadXCount;
+            console.log(BubbleModule.areaWidth);
+            max = 'width';
         }
 
-        //@todo fill in array with possible spawn locations
-        for (var i = 0; i < quads; i++) {
-            //@todo find x coord within quadX[1]
-            //Math.floor(Math.random()*(max-min+1)+min)
+        totalQuadsX = Math.floor(BubbleModule.areaWidth/(BubbleModule.radius*2));
+        quadIncX = Math.floor(BubbleModule.areaWidth/totalQuadsX);
+        totalQuadsY = Math.floor(BubbleModule.areaHeight/(BubbleModule.radius*2));
+        quadIncY = Math.floor(BubbleModule.areaHeight/totalQuadsY);
 
-            // var x =
+        var xMin = 0;
+        var xMax = quadIncX;
+        var yMin = 0;
+        var yMax = quadIncY;
 
+        if (max == 'height') {
+            for (var i = 0; i < totalQuadsY; i++) {
+                //@todo find x coord within quadX[1]
+                //Math.floor(Math.random()*(max-min+1)+min)
+                BubbleModule.quads[i] = {
+                    xMin: xMin,
+                    xMax: xMax,
+                    yMin: yMin,
+                    yMax: yMax,
+                    filled: false
+                };
 
-            //@todo find y coord within quadY[1]
-            // var y = 0;
+                xMin += quadIncX;
+                xMax += quadIncX;
+                yMin += quadIncY;
+                yMax += quadIncY;
+            }
 
-            // BubbleModule.availCoords.push({
-            //     x: x,
-            //     y: y
-            // })
+        }
+        else {
+            for (var j = 0; j< totalQuadsX; j++) {
+                //@todo find x coord within quadX[1]
+                //Math.floor(Math.random()*(max-min+1)+min)
+                BubbleModule.quads[j] = {
+                    xMin: xMin,
+                    xMax: xMax,
+                    yMin: yMin,
+                    yMax: yMax,
+                    filled: false
+                };
+
+                xMin += quadIncX;
+                xMax += quadIncX;
+                yMin += quadIncY;
+                yMax += quadIncY;
+            }
+
         }
 
-        // var incX = parseInt(Math.ceil(BubbleModule.areaWidth/BubbleModule.bubbleCount)) + 2;
-        // var last = BubbleModule.radius + 1;
-        // for (var i = 0; i < BubbleModule.bubbleCount; i++) {
-        //     BubbleModule.xOptions.push(last);
-        //     if (last + incX + BubbleModule.radius >= BubbleModule.areaWidth) {
-        //         @todo move back to starting x with next available y
+        console.log(BubbleModule.quads);
+
+
+    },
+
+    getNewCoord: function (min, max) {
+        return Math.floor(Math.random()*(max-min+1)+min);
+    },
+
+    getRandX: function () {
+        return parseInt(Math.random() * (BubbleModule.areaWidth - BubbleModule.radius * 2) + BubbleModule.radius);
+    },
+
+    getRandY: function () {
+        return parseInt(Math.random() * (BubbleModule.areaHeight - BubbleModule.radius  * 2) + BubbleModule.radius);
+    },
+
+    getNewCoords: function () {
+        // if (BubbleModule.firstLoad) {
+        //     @todo pick a quadrant for the new bubble
+            //
+            // BubbleModule.firstLoad = false;
+            //
+            // $.each(BubbleModule.quads, function (i, val) {
+            //
+            //     if (val.filled == false) {
+            //         BubbleModule.quads[i].filled = true;
+            //
+            //         var x = BubbleModule.getNewCoord(val.xMin, val.xMax);
+            //         console.log(x);
+                    //
+                    // var y = BubbleModule.getNewCoord(val.yMin, val.yMax);
+                    // console.log(y);
+                    //
+                    // return {
+                    //     x: x,
+                    //     y: y
+                    // }
+                // }
+            //
+            // });
         //
-        //     }
-        //     else {
-        //         last = last + incX;
-        //     }
+        //
+        //
+        // }
+        // else {
+            var x = BubbleModule.getRandX();
+            var y = BubbleModule.getRandY();
 
+            return {
+                x: x,
+                y: y
+            };
         // }
 
-    },
-
-    getNewX: function () {
-        var x = Math.random() * (BubbleModule.areaWidth - BubbleModule.radius * 2) + BubbleModule.radius;
 
 
-        return parseInt(x);
-    },
 
-    getNewY: function () {
-        var y = Math.random() * (BubbleModule.areaHeight - BubbleModule.radius  * 2) + BubbleModule.radius;
-
-        return parseInt(y);
     },
 
     //start the page animation
@@ -162,7 +297,6 @@ var BubbleModule = {
         //redraw each bubble using the update function
         for (let i = 0; i < BubbleModule.bubbleArray.length; i++) {
             BubbleModule.bubbleArray[i].update();
-
         }
 
     },
@@ -258,6 +392,8 @@ const Circle = function(x, y, dx, dy, radius) {
     this.radius = radius;
     //bubble fill color
     this.color = 'blue';
+    //text color inside bubble
+    this.textColor = 'black';
 
     //draw the bubble on the canvas
     this.draw = function() {
@@ -267,6 +403,14 @@ const Circle = function(x, y, dx, dy, radius) {
         BubbleModule.context.stroke();
         BubbleModule.context.fillStyle = this.color;
         BubbleModule.context.fill();
+
+        BubbleModule.context.textAlign="center";
+        BubbleModule.context.textBaseline="middle";
+        BubbleModule.context.font=(this.radius*.5)+"px Consolas";
+        BubbleModule.context.fillStyle = this.textColor;
+
+        //@todo get text for bubble
+        BubbleModule.context.fillText('text', this.x, this.y);
     };
 
     //update the x and y then check for collisions before redrawing
