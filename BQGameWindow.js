@@ -45,13 +45,15 @@ var BubbleModule = {
     //array of Circle objects aka bubbles
     bubbleArray: [],
     //total number of bubbles
-    bubbleCount: 2,
+    bubbleCount: 10,
     //radius for bubbles
     radius: 45,
 
     usedCoords: [],
     firstLoad: true,
     quads: null,
+    grids: null,
+    grid_size: 5,
 
     //renders the bubbles
     render: function() {
@@ -61,178 +63,55 @@ var BubbleModule = {
         //reset the bubbleArray length to zero for safety
         BubbleModule.bubbleArray.length = 0;
 
-        // BubbleModule.setupQuads();
-
+        //total number of tries to get a full set of valid coordinates - helps prevent forever loops
         var maxAttempts = BubbleModule.bubbleCount*10;
-        var available = true;
+
+        //holds the possible points for the bubbles
         var points = [];
 
         while((points.length <= BubbleModule.bubbleCount) && maxAttempts > 0) {
             var coords = BubbleModule.getNewCoords();
-            // console.log(coords);
             var x = coords.x;
             var y = coords.y;
 
-            var buf = 5;
-
-            // for (let point in points) {
-                $.each(points, function (i, point) {
-
-
-                // if ( (point.x !== x ) && ( point.y !== y ) ) {
-
-                console.log(point.x);
-                // console.log(BubbleModule.radius);
-                // console.log(buf);
-                var xMin = point.x-BubbleModule.radius-buf;
-                var xMax = point.x+BubbleModule.radius+buf;
-                var yMin = point.y-BubbleModule.radius-buf;
-                var yMax = point.y+BubbleModule.radius+buf;
-
-                console.log('x: ' + xMin + ' - ' + xMax);
-                console.log('y: ' + yMin + ' - ' + yMax);
-
-                if ( (x > xMax && y > yMax) || (x < xMin && y < yMin) ) {
-                    // if (Math.sqrt( (point.x-x) * (point.x-x) + (point.y-y) * (point.y-y) ) < (BubbleModule.radius*2) ) {
-                        available = false;
-                    // }
+            var addFlag = true;
+            //check the new coordinates against all other points in the array
+            $.each(points, function (i, point) {
+                //if the x and y coords are not valid then mark that it's not safe to add
+                if (Math.sqrt( (point.x-x) * (point.x-x) + (point.y-y) * (point.y-y) ) < (BubbleModule.radius*2) ) {
+                    addFlag = false;
                 }
-                // if (Math.abs(point.x-x) < BubbleModule.bubbleCount &&
-                //     Math.abs(point.y-y) < BubbleModule.bubbleCount) {
-                //
-                // }
-            // }
-                });
+            });
 
-            if (available) {
+            //if it is safe to add then add it to the points array
+            if (addFlag) {
                 points.push({
                     x: x,
                     y: y
                 });
-
             }
 
-            available = true;
             maxAttempts -= 1;
-
-
         }
 
-        console.log(points);
-
-        // //create each bubble using the Circle object
+        //create each bubble using the Circle object
         for (let i = 0; i < BubbleModule.bubbleCount; i++) {
-        //     //randomize the x and y being sure they're within the available area and that no part of the bubble will be outside it
-        //     // var x = BubbleModule.getRandX();
-        //     // var y = BubbleModule.getRandY();
-        //var coords = BubbleModule.getNewCoords();
-            var Bcoords = points[i];
-            console.log(Bcoords);
-            var Bx = Bcoords.x;
-            var By = Bcoords.y;
-        //
+            //get the coordinates from the points array and assign it to x and y for the bubble
+            coords= points[i];
+            x = coords.x;
+            y = coords.y;
 
-        //     // var x = coords.x;
-        //     // var y = coords.y;
-        //
-        //
-        //     //randomize the direction the bubble will move (both x and y)
+            //randomize the direction the bubble will move (both x and y)
             var dx = parseInt( (Math.random() - 2) * 2);
             var dy = parseInt( (Math.random() - 2) * 2);
-        //
-        //     // console.log(x + ", " + y);
-        //     // console.log(dx + ' - ' + dy);
-        //
-        //     //create the Circle with the randomized variables
-            BubbleModule.bubbleArray.push(new Circle(Bx, By, dx, dy, BubbleModule.radius))
+
+
+            //create the Circle with the randomized variables
+            BubbleModule.bubbleArray.push(new Circle(x, y, dx, dy, BubbleModule.radius));
         }
-
-
 
         //start the page animation
         BubbleModule.animate();
-    },
-
-
-
-    setupQuads: function () {
-        //total number of quadrants - max number of bubbles technically
-        var totalQuadsX = null;
-        var totalQuadsY = null;
-        //size of each quadrant
-        var quadIncX = null;
-        var quadIncY = null;
-
-        //holds min/max for each quadrant
-        BubbleModule.quads = [];
-
-        var max = null;
-
-        if (BubbleModule.areaWidth >= BubbleModule.areaHeight) {
-            console.log(BubbleModule.areaHeight);
-            max = 'height';
-        }
-        else {
-            console.log(BubbleModule.areaWidth);
-            max = 'width';
-        }
-
-        totalQuadsX = Math.floor(BubbleModule.areaWidth/(BubbleModule.radius*2));
-        quadIncX = Math.floor(BubbleModule.areaWidth/totalQuadsX);
-        totalQuadsY = Math.floor(BubbleModule.areaHeight/(BubbleModule.radius*2));
-        quadIncY = Math.floor(BubbleModule.areaHeight/totalQuadsY);
-
-        var xMin = 0;
-        var xMax = quadIncX;
-        var yMin = 0;
-        var yMax = quadIncY;
-
-        if (max == 'height') {
-            for (var i = 0; i < totalQuadsY; i++) {
-                //@todo find x coord within quadX[1]
-                //Math.floor(Math.random()*(max-min+1)+min)
-                BubbleModule.quads[i] = {
-                    xMin: xMin,
-                    xMax: xMax,
-                    yMin: yMin,
-                    yMax: yMax,
-                    filled: false
-                };
-
-                xMin += quadIncX;
-                xMax += quadIncX;
-                yMin += quadIncY;
-                yMax += quadIncY;
-            }
-
-        }
-        else {
-            for (var j = 0; j< totalQuadsX; j++) {
-                //@todo find x coord within quadX[1]
-                //Math.floor(Math.random()*(max-min+1)+min)
-                BubbleModule.quads[j] = {
-                    xMin: xMin,
-                    xMax: xMax,
-                    yMin: yMin,
-                    yMax: yMax,
-                    filled: false
-                };
-
-                xMin += quadIncX;
-                xMax += quadIncX;
-                yMin += quadIncY;
-                yMax += quadIncY;
-            }
-
-        }
-
-        console.log(BubbleModule.quads);
-
-
-    },
-
-    getNewCoord: function (min, max) {
-        return Math.floor(Math.random()*(max-min+1)+min);
     },
 
     getRandX: function () {
@@ -244,46 +123,13 @@ var BubbleModule = {
     },
 
     getNewCoords: function () {
-        // if (BubbleModule.firstLoad) {
-        //     @todo pick a quadrant for the new bubble
-            //
-            // BubbleModule.firstLoad = false;
-            //
-            // $.each(BubbleModule.quads, function (i, val) {
-            //
-            //     if (val.filled == false) {
-            //         BubbleModule.quads[i].filled = true;
-            //
-            //         var x = BubbleModule.getNewCoord(val.xMin, val.xMax);
-            //         console.log(x);
-                    //
-                    // var y = BubbleModule.getNewCoord(val.yMin, val.yMax);
-                    // console.log(y);
-                    //
-                    // return {
-                    //     x: x,
-                    //     y: y
-                    // }
-                // }
-            //
-            // });
-        //
-        //
-        //
-        // }
-        // else {
-            var x = BubbleModule.getRandX();
-            var y = BubbleModule.getRandY();
+        var x = BubbleModule.getRandX();
+        var y = BubbleModule.getRandY();
 
-            return {
-                x: x,
-                y: y
-            };
-        // }
-
-
-
-
+        return {
+            x: x,
+            y: y
+        };
     },
 
     //start the page animation
@@ -322,9 +168,7 @@ var BubbleModule = {
                 BubbleModule.bubbleClicked(index);
 
             }
-
         }
-
     },
 
     //@todo implement what happens to the bubble after it's clicked
