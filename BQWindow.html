@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="jquery-style.css">
+    <link rel="stylesheet" href="BQStartWindow.css">
+    <link rel="stylesheet" href="BQGameWindow.css">
+    <!--<link rel="stylesheet" href="BQWrongWindow.css">-->
+    <!--<link rel="stylesheet" href="BQScoreWindow.css">-->
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="verses.js"></script>
+    <script src="BQBase.js"></script>
+    <script src="BQStartWindow.js"></script>
+    <script src="BQGameWindow.js"></script>
+    <!--@todo create these-->
+    <!--<script src="BQWrongWindow.js"></script>-->
+    <!--<script src="BQScoreWindow.js"></script>-->
+
+</head>
+<body>
+    <!--@todo change to id since there's only one-->
+    <div class="container">
+        <div id="startWindow">
+            <div class="bibleQ">
+                BQ <br> Bubble <br> Blast
+            </div><!--bibleQ div-->
+
+            <div class="options">
+                <label for="division"> Select a division </label>
+                <select name="division" id="division">
+                    <option selected="selected">Beginner</option>
+                    <option>Junior</option>
+                    <option>Int Sr</option>
+                    <option>Exp Sr</option>
+                </select>
+
+                <label for="start_verse"> Select a start verse </label>
+                <select name="start_verse" id="start_verse">
+                    <option id="startEmptyOption" />
+                </select>
+
+                <label for="end_verse"> Select an end verse </label>
+                <select name="end_verse" id="end_verse">
+                    <option id="endEmptyOption" />
+                </select>
+
+                <label for="num_of_questions"> Select a # of Questions </label>
+                <select name="num_of_questions" id="num_of_questions">
+                    <option id="numEmptyOption" />
+                </select>
+
+                <br><br><br>
+
+                <input class="button" type="submit" id="submitButton" value="Play">
+
+            </div><!--options div-->
+
+            <div id="loginDiv">
+                <!--most likely going to be a form, for people to sign-in-->
+                <!--<form action="login.php" method="POST">-->
+                <div class="player">
+                Optional (Sign-in not required)
+                <br><br>
+                Username: <input type="text" name="username" size="15"/>
+                <br><br>
+                Password: <input type="text" name="password" size="15"/>
+                <br><br>
+                *By signing in, your high scores <br>and performance will be saved
+                </div>
+                <!--</form>-->
+            </div><!--login div-->
+
+        </div> <!--startWindow div-->
+
+        <div id="gameWindow" style="display: none;">
+            <div id="bubbleBoundary">
+                <canvas id="bubbleArea">
+                </canvas>
+            </div>
+
+        </div> <!--gameWindow-->
+
+        <div id="wrongWindow" style="display: none;">
+            <div class='message'>
+                This is where the correct verse will flash for
+                <br>
+                <br>
+                10 seconds then you will get another chance.
+            </div>
+        </div> <!--wrongWindow-->
+
+        <div id="scoreWindow" style="display: none;">
+            <p id = "gameOver">Game Over! <button id = "playAgain"> Play Again! </button></p>
+
+            <div class = "score">
+                [X] Verses Correct, [Y] Missed
+                <!-- This is to display the score; i.e., "[X] Correct, [Y] Missed" -->
+            </div>
+            <div class = "time">
+                Game Duration: xxxx seconds
+                <!-- This is to display the total time it took for the player to complete all of the questions -->
+            </div>
+            <div class = "rank">
+                You are ranked x out of x total games played.
+                <!-- This shows the rank of the player, i.e. "You are rank [x] out of [y] total games played." -->
+            </div>
+            <div class = "ovScores">
+                Overall Score:
+                <!-- This shows the overall best scores of everyone who has created an account -->
+            </div>
+            <div class = "bestScores">
+                Best Scores:
+                <!-- This shows the player's best scores -->
+            </div>
+            <div class = "missed">
+                Verses Missed:
+                <!-- This shows what verses the player got wrong -->
+            </div>
+
+        </div> <!--scoreWindow-->
+
+  </div><!--Container div-->
+</body>
+</html>

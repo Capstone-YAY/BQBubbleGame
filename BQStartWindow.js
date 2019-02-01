@@ -1,91 +1,89 @@
- $( function() {
- 	//initialize all the select menus with jquery and make them scrollable
+function renderStartWindow() {
+    //initialize all the select menus with jquery and make them scrollable
     $( "#division" ).selectmenu();
- 
+
     $( "#start_verse" ).selectmenu()
-		.selectmenu("menuWidget")
-			.addClass("overflow");
- 
+        .selectmenu("menuWidget")
+        .addClass("overflow");
+
     $( "#end_verse" ).selectmenu()
-		.selectmenu("menuWidget")
-			.addClass("overflow");
-      
+        .selectmenu("menuWidget")
+        .addClass("overflow");
+
     $( "#num_of_questions" ).selectmenu()
-		.selectmenu("menuWidget")
-			.addClass("overflow");
+        .selectmenu("menuWidget")
+        .addClass("overflow");
 
 
     //set the default division so we can initialize everything
-	VersesModule.division = 'Beginner';
+    VersesModule.division = 'Beginner';
 
-	//prepare the module and its variables
-	VersesModule.render();
+    //prepare the module and its variables
+    VersesModule.render();
 
-	//prepare the verses
-	VersesModule.getRefs();
+    //prepare the verses
+    VersesModule.getRefs();
 
-	//if someone changes the division
-	$( "#division" ).on( "selectmenuselect", function( event, ui ) {
-		//reset the VerseModule variables
-		VersesModule.render();
+    //if someone changes the division
+    $( "#division" ).on( "selectmenuselect", function( event, ui ) {
+        //reset the VerseModule variables
+        VersesModule.render();
 
-		//clear all the options in the list so it doesn't just keep appending
-		clearAllOptions();
+        //clear all the options in the list so it doesn't just keep appending
+        clearAllOptions();
 
-		//set the variable division to the selected option
-		if ($('#division').val() == 'Beginner') {
-			
-			VersesModule.division = 'Beginner';
-		}
-		if ($('#division').val() == 'Junior') {
-			
+        //set the variable division to the selected option
+        if ($('#division').val() == 'Beginner') {
+
+            VersesModule.division = 'Beginner';
+        }
+        if ($('#division').val() == 'Junior') {
+
             VersesModule.division = 'Junior';
-		}
-		if ($('#division').val() == 'Int Sr') {
-			
+        }
+        if ($('#division').val() == 'Int Sr') {
+
             VersesModule.division = 'Int Sr';
-		}
-		if ($('#division').val() == 'Exp Sr') {
+        }
+        if ($('#division').val() == 'Exp Sr') {
 
             VersesModule.division = 'Exp Sr';
-		}
+        }
 
-		//prepare the appropriate verses
+        //prepare the appropriate verses
         VersesModule.getRefs();
-	});
+    });
 
-	//if someone changes the start verse
-	$( "#start_verse" ).on( "selectmenuselect", function( event, ui ) {
+    //if someone changes the start verse
+    $( "#start_verse" ).on( "selectmenuselect", function( event, ui ) {
 
-		//clear all the end verses because the options might change
-		$('#end_verse option').each(function (index, option) {
-			$(option).remove();
-		});
+        //clear all the end verses because the options might change
+        $('#end_verse option').each(function (index, option) {
+            $(option).remove();
+        });
 
-		//prepare the end verses list
-		VersesModule.populateEndSelectMenu();
-	});
+        //prepare the end verses list
+        VersesModule.populateEndSelectMenu();
+    });
 
-	//if someone changes the end verse
-     $( "#end_verse" ).on( "selectmenuselect", function( event, ui ) {
+    //if someone changes the end verse
+    $( "#end_verse" ).on( "selectmenuselect", function( event, ui ) {
 
-     	//clear all the number of questions options because it'll change
-         $('#num_of_questions option').each(function (index, option) {
-             $(option).remove();
-         });
+        //clear all the number of questions options because it'll change
+        $('#num_of_questions option').each(function (index, option) {
+            $(option).remove();
+        });
 
-         //prepare the number of questions list
-         VersesModule.populateQuestNumSelectMenu();
-     });
+        //prepare the number of questions list
+        VersesModule.populateQuestNumSelectMenu();
+    });
 
 
-	$("#submitButton").on('click', function() {
-		alert("YAY you're ready to play");
-	});
-	
-	
+    $("#submitButton").on('click', function() {
+        alert("YAY you're ready to play");
+    });
 
- });
+}
 
 function randomizer(array)
 {

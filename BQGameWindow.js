@@ -1,38 +1,34 @@
 //BQGameWindow.js
 
-$( function() {
-   console.log('loaded');
-
-   //set the bubble area's width and height equivalent to that of the page
-   $('#bubbleArea').attr('width', $('#bubbleBoundary').width());
-   $('#bubbleArea').attr('height', $('#bubbleBoundary').height());
+function renderGameWindow() {
+    //set the bubble area's width and height equivalent to that of the page
+    $('#bubbleArea').attr('width', $('#bubbleBoundary').width());
+    $('#bubbleArea').attr('height', $('#bubbleBoundary').height());
 
     //set the height and width variables so we know how large the bubble area is
-   BubbleModule.areaWidth = ($('#bubbleArea').width());
-   BubbleModule.areaHeight = ($('#bubbleArea').height());
+    BubbleModule.areaWidth = ($('#bubbleArea').width());
+    BubbleModule.areaHeight = ($('#bubbleArea').height());
 
 
-   //once the body is loaded render the bubbles
-   $('body').ready(BubbleModule.render());
+    //once the body is loaded render the bubbles
+    $('body').ready(BubbleModule.render());
 
 
-   //if the bubble area is clicked
-   $('#bubbleArea').on('click', function(e) {
-       //get the click location relative to parent's mouse position
-       var posX = $(this).position().left;
-       var posY = $(this).position().top;
+    //if the bubble area is clicked
+    $('#bubbleArea').on('click', function(e) {
+        //get the click location relative to parent's mouse position
+        var posX = $(this).position().left;
+        var posY = $(this).position().top;
 
-       //get mouse x and y according to page so it matches the bubble's x and y ranges
-       var mouseX = e.pageX - posX;
-       var mouseY = e.pageY - posY;
+        //get mouse x and y according to page so it matches the bubble's x and y ranges
+        var mouseX = e.pageX - posX;
+        var mouseY = e.pageY - posY;
 
-       //check if there's a bubble at mouseX and mouseY
-       BubbleModule.checkBubbleLocations(mouseX, mouseY);
+        //check if there's a bubble at mouseX and mouseY
+        BubbleModule.checkBubbleLocations(mouseX, mouseY);
 
-   });
-
-
-});
+    });
+}
 
 
 var BubbleModule = {
@@ -93,6 +89,8 @@ var BubbleModule = {
 
             maxAttempts -= 1;
         }
+
+        console.log(points);
 
         //create each bubble using the Circle object
         for (let i = 0; i < BubbleModule.bubbleCount; i++) {
