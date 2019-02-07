@@ -1,4 +1,4 @@
-﻿		 var allRefs = ["1Th1:1",
+﻿var allRefs = ["1Th1:1",
 "1Th1:2",
 "1Th1:3",
 "1Th1:4",
@@ -541,7 +541,7 @@
 "2Pe3:15",
 "2Pe3:16",
 "2Pe3:17",
-"2Pe3:18"];
+"2Pe3:18"]; //end verse refs array
 
 		var allVerses = ["Paul, and Silvanus, and Timotheus, unto the church of the Thessalonians which is in God the Father and in the Lord Jesus Christ: Grace be unto you, and peace, from God our Father, and the Lord Jesus Christ.",
 "We give thanks to God always for you all, making mention of you in our prayers;",

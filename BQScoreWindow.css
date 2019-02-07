@@ -2,7 +2,7 @@ body{
     background: black;
 }
 
-.container{ /* this is the entire space holding all of the other elements on the page */
+#container{ /* this is the entire space holding all of the other elements on the page */
     width: 55%;
     height: 600px;
     background-image: url('BQBubbles.jpg');
