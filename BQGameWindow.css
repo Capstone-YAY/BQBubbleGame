@@ -5,28 +5,40 @@ body
 }
 
 #bubbleBoundary {
-  margin-top: 20px;
-  margin-bottom: 30px;
-  height: 80%;
+  /*margin-top: 20px;
+  margin-bottom: 30px;*/
+  /* margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto; */
+  height: 100%;
   width: 100%;
   background-color: red;
-  object-fit: contain;
+
 }
 
 #bubbleArea {
   /*height: 100%;*/
   /*width: 100%;*/
-
-  background-color: green;
+ /*background-color: green;*/
+ background-image: url('clouds1.png');
+ object-fit: cover;
 }
 
+#randomverse{
+  border: 5px solid dotted blue;
+  color: white;
+  text-align: center;
+  font-size: 25px;
+  font-family: "Droid Sans", "arial", "sans serif";
+  position: relative;
+}
 
 div.container{
   width: 50%;
-  height: 600px;
-  background-image: url('clouds1.png');
-  opacity: 20%;
-  background-repeat: no-repeat;
+  height: 1000px;
+  /*background-image: url('clouds1.png');*/
+/*  background-repeat: no-repeat;*/
   background-size: cover;
   border: 5px solid red;
   margin-left: auto;
@@ -35,7 +47,16 @@ div.container{
   padding-bottom: 100px;
   color: white;
 }
-  
+
+div.secondTenthsExample.values{
+  color: palevioletred;
+}
+
+button { 
+   cursor: pointer; 
+   font-weight: 700; } 
+   
+
   /*the following ID tags are for the bubbles that will be in the game window*/
   #bubble1
   {
@@ -73,9 +94,3 @@ div.container{
     color: rgb(0, 70, 183);
   }
   
-  /*This is for the timer in the game*/
-  #timer
-  {
-    font-family: "Droid Sans", arial, "sans serif";
-    color: rgb(3, 63, 160);
-  }
