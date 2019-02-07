@@ -80,15 +80,18 @@ function renderStartWindow() {
 
 
     $("#submitButton").on('click', function() {
-        alert("YAY you're ready to play");
+        // alert("YAY you're ready to play");
+        division = $('#division').val();
+        start_verse = $('#start_verse').val();
+        end_verse = $('#end_verse').val();
+        num_quest = $('#num_of_questions').val();
+
+        renderGameWindow();
     });
 
-}
+    //@todo remove
+    // $("#submitButton").click();
 
-function randomizer(array)
-{
-	var rand = array[Math.floor(Math.random() * array.length)];
-	return rand;
 }
 
 function clearAllOptions() {
@@ -112,11 +115,11 @@ var VersesModule = {
 	userRefs: null,
 
 	//index that ends the beginner array
-	beginnerArrayIndex: 135,
+	beginnerArrayIndex: 136,
     //index that ends the junior array
-	juniorArrayIndex: 266,
+	juniorArrayIndex: 267,
     //index that ends the int Sr array
-	intSrArrayIndex: 377,
+	intSrArrayIndex: 378,
 	//expSrArrayIndex is all the verses
 
 	render: function() {
@@ -124,8 +127,7 @@ var VersesModule = {
 	},
 
 	getRefs: function() {
-		//get Refs variable from Verses.js file
-		var allRefs = Refs;
+        //allRefs variable is defined in verses.js file
 
 		//based on division and the array indexes get the necessary verses
 		if (VersesModule.division === 'Beginner') {
@@ -219,6 +221,6 @@ var VersesModule = {
 		//refresh after all the options have been added
         $('#num_of_questions').selectmenu('refresh', true);
 	
-	}
+	},
 
 };

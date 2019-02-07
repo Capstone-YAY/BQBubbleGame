@@ -1,6 +1,9 @@
 //BQGameWindow.js
 
 function renderGameWindow() {
+    $('#startWindow').css('display', 'none');
+    $('#gameWindow').css('display', 'block');
+
     //set the bubble area's width and height equivalent to that of the page
     $('#bubbleArea').attr('width', $('#bubbleBoundary').width());
     $('#bubbleArea').attr('height', $('#bubbleBoundary').height());
@@ -41,7 +44,7 @@ var BubbleModule = {
     //array of Circle objects aka bubbles
     bubbleArray: [],
     //total number of bubbles
-    bubbleCount: 10,
+    bubbleCount: 6,
     //radius for bubbles
     radius: 45,
 
@@ -94,20 +97,33 @@ var BubbleModule = {
 
         //create each bubble using the Circle object
         for (let i = 0; i < BubbleModule.bubbleCount; i++) {
-            //get the coordinates from the points array and assign it to x and y for the bubble
-            coords= points[i];
-            x = coords.x;
-            y = coords.y;
+            if (i >= points.length) {
+                alert("Could not create enough bubble locations");
+                break;
+            }
+            else {
+                //get the coordinates from the points array and assign it to x and y for the bubble
+                coords = points[i];
+                if (coords == null) {
+                    alert('Ran out of bubble points!');
+                    break;
+                }
+                // console.log(coords);
+                x = coords.x;
+                y = coords.y;
 
-            //randomize the direction the bubble will move (both x and y)
-            var dx = parseInt( (Math.random() - 2) * 2);
-            var dy = parseInt( (Math.random() - 2) * 2);
+                //randomize the direction the bubble will move (both x and y)
+                var dx = parseInt((Math.random() - 2) * 2);
+                var dy = parseInt((Math.random() - 2) * 2);
 
 
-            //create the Circle with the randomized variables
-            BubbleModule.bubbleArray.push(new Circle(x, y, dx, dy, BubbleModule.radius));
+                //@todo get random verse info here by bubble
+                var ref = BubbleModule.getRandomVerse();
+
+                //create the Circle with the randomized variables
+                BubbleModule.bubbleArray.push(new Circle(x, y, dx, dy, BubbleModule.radius, ref));
+            }
         }
-
         //start the page animation
         BubbleModule.animate();
     },
@@ -215,6 +231,23 @@ var BubbleModule = {
         });
 
         return false;
+    },
+
+    getRandomVerse: function () {
+        var startIndex = $.trim(start_verse.substr(0, start_verse.indexOf('-')));
+        var endIndex = $.trim(end_verse.substr(0, end_verse.indexOf('-')));
+
+        console.log(startIndex);
+        console.log(endIndex);
+
+        var verseIndex = BubbleModule.getRandomInt(startIndex, endIndex);
+
+        return allRefs[verseIndex];
+
+    },
+
+    getRandomInt: function (min,max) {
+        return Math.floor(Math.random()*(max-min+1)+min);
     }
 
 
@@ -222,10 +255,10 @@ var BubbleModule = {
 
 };
 
-const Circle = function(x, y, dx, dy, radius) {
+const Circle = function(x, y, dx, dy, radius, ref) {
     this.x = x;
     this.y = y;
-
+    this.text = ref;
     //direction of movement for x
     this.dx = dx;
     //direction of movement for y
@@ -252,7 +285,7 @@ const Circle = function(x, y, dx, dy, radius) {
         BubbleModule.context.fillStyle = this.textColor;
 
         //@todo get text for bubble
-        BubbleModule.context.fillText('text', this.x, this.y);
+        BubbleModule.context.fillText(this.text, this.x, this.y);
     };
 
     //update the x and y then check for collisions before redrawing
