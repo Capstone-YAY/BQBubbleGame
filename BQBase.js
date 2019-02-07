@@ -302,12 +302,10 @@ var BubbleModule = {
     bubbleCount: 6,
     //radius for bubbles
     radius: 45,
-
-    usedCoords: [],
-    firstLoad: true,
-    quads: null,
-    grids: null,
-    grid_size: 5,
+    //ref indexes currently used
+    usedRefs: [],
+    //correct ref index,
+    correctIndex: null,
 
     //renders the bubbles
     render: function() {
@@ -368,16 +366,19 @@ var BubbleModule = {
                 y = coords.y;
 
                 //randomize the direction the bubble will move (both x and y)
-                var dx = parseInt((Math.random() - 2) * 2);
-                var dy = parseInt((Math.random() - 2) * 2);
+                var dx = parseInt((Math.random() - 1.5) * 2);
+                var dy = parseInt((Math.random() - 1.5) * 2);
 
-                //@todo get random verse info here by bubble
-                var ref = BubbleModule.getRandomVerse();
+                var ref = BubbleModule.getRandomVerseIndex();
 
                 //create the Circle with the randomized variables
                 BubbleModule.bubbleArray.push(new Circle(x, y, dx, dy, BubbleModule.radius, ref));
             }
         }
+
+        //set the verse text at the bottom of the screen
+        $('#correctVerse').text(allVerses[BubbleModule.correctIndex]);
+
         //start the page animation
         BubbleModule.animate();
     },
@@ -441,7 +442,14 @@ var BubbleModule = {
 
     //@todo implement what happens to the bubble after it's clicked
     bubbleClicked: function(clickedBubbleIndex) {
-        console.log(BubbleModule.bubbleArray[clickedBubbleIndex]);
+        var clickedBubble = BubbleModule.bubbleArray[clickedBubbleIndex];
+
+        if (clickedBubble.verseIndex === BubbleModule.correctIndex) {
+            alert('correct bubble yay');
+        }
+        else {
+            alert('wrong bubble');
+        }
 
         //remove the bubble from the array
         BubbleModule.bubbleArray.splice(clickedBubbleIndex, 1);
@@ -487,17 +495,33 @@ var BubbleModule = {
         return false;
     },
 
-    getRandomVerse: function () {
+    getRandomVerseIndex: function () {
         var startIndex = $.trim(StartWindowModule.gameStartVerse.substr(0, StartWindowModule.gameStartVerse.indexOf('-')));
         var endIndex = $.trim(StartWindowModule.gameEndVerse.substr(0, StartWindowModule.gameEndVerse.indexOf('-')));
 
-        console.log(startIndex);
-        console.log(endIndex);
+        var maxAttempts = 1000;
+        var validIndex = false;
 
-        var verseIndex = BubbleModule.getRandomInt(startIndex, endIndex);
+        while (! validIndex && maxAttempts > 0) {
+            var verseIndex = BubbleModule.getRandomInt(startIndex, endIndex);
 
-        return allRefs[verseIndex];
+            if (BubbleModule.usedRefs.length === 0) {
+                validIndex = true;
+            }
+            else if ($.inArray(verseIndex, BubbleModule.usedRefs) === -1){
+                validIndex = true;
+            }
 
+            maxAttempts -= 1;
+        }
+
+        BubbleModule.usedRefs.push(verseIndex);
+
+        if (BubbleModule.correctIndex == null) {
+            BubbleModule.correctIndex = verseIndex;
+        }
+
+        return verseIndex;
     },
 
     getRandomInt: function (min,max) {
@@ -513,7 +537,8 @@ const Circle = function(x, y, dx, dy, radius, ref) {
     this.x = x;
     this.y = y;
     //ref to be displayed on the bubble
-    this.text = ref;
+    this.verseIndex = ref;
+
     //direction of movement for x
     this.dx = dx;
     //direction of movement for y
@@ -539,7 +564,7 @@ const Circle = function(x, y, dx, dy, radius, ref) {
         BubbleModule.context.font=(this.radius*.5)+"px Consolas";
         BubbleModule.context.fillStyle = this.textColor;
 
-        BubbleModule.context.fillText(this.text, this.x, this.y);
+        BubbleModule.context.fillText(allRefs[this.verseIndex], this.x, this.y);
     };
 
     //update the x and y then check for collisions before redrawing
