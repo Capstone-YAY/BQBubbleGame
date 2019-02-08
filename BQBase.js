@@ -1,7 +1,3 @@
-// var division = null;
-// var start_verse = null;
-// var end_verse = null;
-// var num_quest = null;
 
 $( function() {
     StartWindowModule.render();
@@ -255,6 +251,7 @@ var VersesModule = {
 };
 
 var GameWindowModule = {
+    currentQuest: 0,
 
     render: function () {
         $('#startWindow').css('display', 'none');
@@ -268,8 +265,10 @@ var GameWindowModule = {
         BubbleModule.areaWidth = ($('#bubbleArea').width());
         BubbleModule.areaHeight = ($('#bubbleArea').height());
 
+        BubbleModule.setGameBubbleSpeed();
+
         //once the body is loaded render the bubbles
-        $('body').ready(BubbleModule.render());
+        $('body').ready(BubbleModule.startBubbleArea());
 
         //if the bubble area is clicked
         $('#bubbleArea').on('click', function(e) {
@@ -284,12 +283,17 @@ var GameWindowModule = {
             //check if there's a bubble at mouseX and mouseY
             BubbleModule.checkBubbleLocations(mouseX, mouseY);
         });
+
     }
 
 
 };
 
 var BubbleModule = {
+    //holds the animation frame id AKA the only way to stop the animation
+    animationFrame: null,
+    //pauses the animation when true - used to pause when overlays are flashed
+    paused: false,
     //width of the bubble area
     areaWidth: null,
     //height of the bubble area
@@ -298,17 +302,52 @@ var BubbleModule = {
     context: null,
     //array of Circle objects aka bubbles
     bubbleArray: [],
+    //default starting number of bubbles
+    defaultBubbleCount: 2,
     //total number of bubbles
-    bubbleCount: 6,
+    currBubbleCount: null,
     //radius for bubbles
     radius: 45,
     //ref indexes currently used
     usedRefs: [],
     //correct ref index,
     correctIndex: null,
+    //directional x and y - speed of all bubbles during the game - so they're all the same speed
+    dx: null,
+    dy: null,
+
+    //randomize the direction the bubble will move (both x and y)
+    setGameBubbleSpeed: function () {
+        BubbleModule.dx = parseInt((Math.random() - 1.5) * 2);
+        BubbleModule.dy = parseInt((Math.random() - 1.5) * 2);
+    },
+
+    restartBubbleArea: function () {
+        BubbleModule.resetBubbleArea();
+        BubbleModule.startBubbleArea();
+    },
+
+    stopAnimation: function() {
+        cancelAnimationFrame(BubbleModule.animationFrame);
+    },
+
+    resetBubbleArea: function() {
+        cancelAnimationFrame(BubbleModule.animationFrame);
+        BubbleModule.animationFrame = null;
+        BubbleModule.bubbleArray = [];
+        BubbleModule.usedRefs = [];
+        BubbleModule.correctIndex = null;
+        BubbleModule.paused = false;
+        BubbleModule.context.clearRect(0, 0, BubbleModule.areaWidth, BubbleModule.areaHeight);
+    },
 
     //renders the bubbles
-    render: function() {
+    startBubbleArea: function() {
+        BubbleModule.currBubbleCount = BubbleModule.defaultBubbleCount;
+
+        GameWindowModule.currentQuest++;
+        console.log('cur quest: ' + GameWindowModule.currentQuest);
+
         //get what's there
         BubbleModule.context= bubbleArea.getContext('2d');
 
@@ -316,12 +355,12 @@ var BubbleModule = {
         BubbleModule.bubbleArray.length = 0;
 
         //total number of tries to get a full set of valid coordinates - helps prevent forever loops
-        var maxAttempts = BubbleModule.bubbleCount*10;
+        var maxAttempts = BubbleModule.defaultBubbleCount*10;
 
         //holds the possible points for the bubbles
         var points = [];
 
-        while((points.length <= BubbleModule.bubbleCount) && maxAttempts > 0) {
+        while((points.length <= BubbleModule.defaultBubbleCount) && maxAttempts > 0) {
             var coords = BubbleModule.getNewCoords();
             var x = coords.x;
             var y = coords.y;
@@ -347,9 +386,10 @@ var BubbleModule = {
         }
 
         // console.log(points);
+        console.log(BubbleModule.defaultBubbleCount);
 
         //create each bubble using the Circle object
-        for (let i = 0; i < BubbleModule.bubbleCount; i++) {
+        for (let i = 0; i < BubbleModule.defaultBubbleCount; i++) {
             if (i >= points.length) {
                 alert("Could not create enough bubble locations");
                 break;
@@ -365,16 +405,15 @@ var BubbleModule = {
                 x = coords.x;
                 y = coords.y;
 
-                //randomize the direction the bubble will move (both x and y)
-                var dx = parseInt((Math.random() - 1.5) * 2);
-                var dy = parseInt((Math.random() - 1.5) * 2);
 
                 var ref = BubbleModule.getRandomVerseIndex();
 
                 //create the Circle with the randomized variables
-                BubbleModule.bubbleArray.push(new Circle(x, y, dx, dy, BubbleModule.radius, ref));
+                BubbleModule.bubbleArray.push(new Circle(x, y, BubbleModule.dx, BubbleModule.dy, BubbleModule.radius, ref));
             }
         }
+
+        console.log(BubbleModule.bubbleArray);
 
         //set the verse text at the bottom of the screen
         $('#correctVerse').text(allVerses[BubbleModule.correctIndex]);
@@ -403,59 +442,18 @@ var BubbleModule = {
 
     //start the page animation
     animate: function() {
-        //recursively call the animation
-        requestAnimationFrame(BubbleModule.animate);
+        // if (! BubbleModule.paused) {
+            //recursively call the animation
+            BubbleModule.animationFrame = requestAnimationFrame(BubbleModule.animate);
 
-        //erase the bubbles drawn
-        BubbleModule.context.clearRect(0, 0, BubbleModule.areaWidth, BubbleModule.areaHeight);
+            //erase the bubbles drawn
+            BubbleModule.context.clearRect(0, 0, BubbleModule.areaWidth, BubbleModule.areaHeight);
 
-        //redraw each bubble using the update function
-        for (let i = 0; i < BubbleModule.bubbleArray.length; i++) {
-            BubbleModule.bubbleArray[i].update();
-        }
-
-    },
-
-    //check if mouseX and mouseY are within x and y ranges of any bubble
-    checkBubbleLocations: function(mouseX, mouseY) {
-
-        //check each bubble against mouseX and mouseY
-        for (var index = 0; index < BubbleModule.bubbleArray.length; index++) {
-            var bubble = BubbleModule.bubbleArray[index];
-
-            var x = parseInt(bubble['x']);
-            var y = parseInt(bubble['y']);
-            var rad = parseInt(bubble['radius']);
-            var xMin = x - rad;
-            var xMax = x + rad;
-            var yMin = y - rad;
-            var yMax = y + rad;
-
-            //if the mouseX and mouseY are between their corresponding x and y then a bubble was clicked
-            if ((mouseX > xMin && mouseX < xMax) && (mouseY > yMin && mouseY < yMax)) {
-                // console.log('bubble ' + index + ' was clicked');
-                BubbleModule.bubbleClicked(index);
-
+            //redraw each bubble using the update function
+            for (let i = 0; i < BubbleModule.bubbleArray.length; i++) {
+                BubbleModule.bubbleArray[i].update();
             }
-        }
-    },
-
-    //@todo implement what happens to the bubble after it's clicked
-    bubbleClicked: function(clickedBubbleIndex) {
-        var clickedBubble = BubbleModule.bubbleArray[clickedBubbleIndex];
-
-        if (clickedBubble.verseIndex === BubbleModule.correctIndex) {
-            alert('correct bubble yay');
-        }
-        else {
-            alert('wrong bubble');
-        }
-
-        //remove the bubble from the array
-        BubbleModule.bubbleArray.splice(clickedBubbleIndex, 1);
-        //update the number of bubbles to account for the one being removed
-        BubbleModule.bubbleCount--;
-
+        // }
     },
 
     checkForCollisions: function (thisX, thisY) {
@@ -526,8 +524,86 @@ var BubbleModule = {
 
     getRandomInt: function (min,max) {
         return Math.floor(Math.random()*(max-min+1)+min);
-    }
+    },
 
+    //check if mouseX and mouseY are within x and y ranges of any bubble
+    checkBubbleLocations: function(mouseX, mouseY) {
+
+        //check each bubble against mouseX and mouseY
+        for (var index = 0; index < BubbleModule.bubbleArray.length; index++) {
+            var bubble = BubbleModule.bubbleArray[index];
+
+            var x = parseInt(bubble['x']);
+            var y = parseInt(bubble['y']);
+            var rad = parseInt(bubble['radius']);
+            var xMin = x - rad;
+            var xMax = x + rad;
+            var yMin = y - rad;
+            var yMax = y + rad;
+
+            //if the mouseX and mouseY are between their corresponding x and y then a bubble was clicked
+            if ((mouseX > xMin && mouseX < xMax) && (mouseY > yMin && mouseY < yMax)) {
+                // console.log('bubble ' + index + ' was clicked');
+                BubbleModule.bubbleClicked(index);
+
+            }
+        }
+    },
+
+    //@todo implement what happens to the bubble after it's clicked
+    bubbleClicked: function(clickedBubbleIndex) {
+        var clickedBubble = BubbleModule.bubbleArray[clickedBubbleIndex];
+
+        //remove the bubble from the array
+        BubbleModule.bubbleArray.splice(clickedBubbleIndex, 1);
+        //update the number of bubbles to account for the one being removed
+        BubbleModule.currBubbleCount--;
+
+        if (clickedBubble.verseIndex === BubbleModule.correctIndex) {
+            BubbleModule.correctBubbleClicked();
+        }
+        else {
+            BubbleModule.wrongBubbleClicked(clickedBubble.verseIndex);
+        }
+    },
+
+    wrongBubbleClicked: function (wrongVerseIndex) {
+        // alert('wrong bubble');
+        //@todo show wrong window
+        $('#wrongVerse').text(allVerses[wrongVerseIndex]);
+        BubbleModule.flashWindow($('#wrongWindow'), $('#gameWindow'));
+
+    },
+
+    correctBubbleClicked: function () {
+        // alert('correct bubble yay');
+        //@todo show correct window
+        BubbleModule.flashWindow($('#correctWindow'), $('#gameWindow'));
+
+        //@todo load next set of bubbles if number of questions haven't been done
+        if (GameWindowModule.currentQuest < StartWindowModule.gameNumQuestions) {
+            BubbleModule.restartBubbleArea();
+        }
+        else {
+            BubbleModule.stopAnimation();
+            // BubbleModule.resetBubbleArea();
+            alert('game completed');
+            //@todo show score window
+        }
+    },
+
+    //flashId is the window
+    flashWindow(flashId, origId) {
+        BubbleModule.stopAnimation();
+        origId.css('display', 'none');
+        flashId.css('display', 'block');
+        setTimeout(function() {
+            flashId.css('display', 'none');
+            origId.css('display', 'block');
+            BubbleModule.animate();
+        }, 1000);
+
+    },
 
 
 
