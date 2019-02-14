@@ -114,6 +114,8 @@ var StartWindowModule = {
 
         //if someone clicks play
         $("#submitButton").on('click', function() {
+            TimerModule.time = null;
+
             // alert("YAY you're ready to play");
             StartWindowModule.gameDivision = $('#division').val();
             StartWindowModule.gameStartVerse = $('#start_verse').val();
@@ -265,7 +267,7 @@ var GameWindowModule = {
         BubbleModule.areaWidth = ($('#bubbleArea').width());
         BubbleModule.areaHeight = ($('#bubbleArea').height());
 
-        BubbleModule.setGameBubbleSpeed();
+        // BubbleModule.setGameBubbleSpeed();
 
         //once the body is loaded render the bubbles
         $('body').ready(BubbleModule.startBubbleArea());
@@ -285,6 +287,21 @@ var GameWindowModule = {
         });
 
     }
+
+
+};
+
+var TimerModule = {
+    time: null,
+
+    startTimer: function () {
+        // TimerModule.time = new Timer();
+
+    },
+
+    stopTimer: function () {
+
+    },
 
 
 };
@@ -313,8 +330,13 @@ var BubbleModule = {
     //correct ref index,
     correctIndex: null,
     //directional x and y - speed of all bubbles during the game - so they're all the same speed
-    dx: null,
-    dy: null,
+    dx: 1,
+    dy: 1,
+
+    fpsInt: 0.25,
+    now: null,
+    then: null,
+    elapsed: null,
 
     //randomize the direction the bubble will move (both x and y)
     setGameBubbleSpeed: function () {
@@ -418,6 +440,9 @@ var BubbleModule = {
         //set the verse text at the bottom of the screen
         $('#correctVerse').text(allVerses[BubbleModule.correctIndex]);
 
+        BubbleModule.then = Date.now();
+        BubbleModule.startTime = BubbleModule.then;
+
         //start the page animation
         BubbleModule.animate();
     },
@@ -446,14 +471,20 @@ var BubbleModule = {
             //recursively call the animation
             BubbleModule.animationFrame = requestAnimationFrame(BubbleModule.animate);
 
-            //erase the bubbles drawn
-            BubbleModule.context.clearRect(0, 0, BubbleModule.areaWidth, BubbleModule.areaHeight);
+            BubbleModule.now = Date.now();
+            BubbleModule.elapsed = BubbleModule.now - BubbleModule.then;
 
-            //redraw each bubble using the update function
-            for (let i = 0; i < BubbleModule.bubbleArray.length; i++) {
-                BubbleModule.bubbleArray[i].update();
+            if (BubbleModule.elapsed > BubbleModule.fpsInt) {
+                BubbleModule.then = BubbleModule.now - (BubbleModule.elapsed % BubbleModule.fpsInt);
+
+                //erase the bubbles drawn
+                BubbleModule.context.clearRect(0, 0, BubbleModule.areaWidth, BubbleModule.areaHeight);
+
+                //redraw each bubble using the update function
+                for (let i = 0; i < BubbleModule.bubbleArray.length; i++) {
+                    BubbleModule.bubbleArray[i].update();
+                }
             }
-        // }
     },
 
     checkForCollisions: function (thisX, thisY) {
