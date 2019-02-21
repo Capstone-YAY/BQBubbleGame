@@ -647,7 +647,7 @@ var BubbleModule = {
         else {
             BubbleModule.wrongBubbleClicked(clickedBubble.verseIndex);
             if (BubbleModule.firstClick) {
-                BubbleModule.wrongQuestArr.push(clickedBubble.verseIndex);
+                BubbleModule.wrongQuestArr.push(BubbleModule.correctIndex);
                 BubbleModule.firstClick = false;
             }
         }
