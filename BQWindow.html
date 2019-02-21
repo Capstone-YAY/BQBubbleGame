@@ -98,11 +98,12 @@
             <p id = "gameOver">Game Over! <button id = "playAgain"> Play Again! </button></p>
 
             <div class = "score">
-                [X] Verses Correct, [Y] Missed
+                <span id="correctVerseCount"> </span> Verses Correct,
+                <span id="wrongVerseCount"> </span> Missed
                 <!-- This is to display the score; i.e., "[X] Correct, [Y] Missed" -->
             </div>
             <div class = "time">
-                Game Duration: xxxx seconds
+                Game Duration: <span id="gameTime"></span>
                 <!-- This is to display the total time it took for the player to complete all of the questions -->
             </div>
             <div class = "rank">
@@ -119,6 +120,9 @@
             </div>
             <div class = "missed">
                 Verses Missed:
+                <ul id="wrongVerseList">
+
+                </ul>
                 <!-- This shows what verses the player got wrong -->
             </div>
 

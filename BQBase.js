@@ -267,11 +267,14 @@ var GameWindowModule = {
         BubbleModule.areaWidth = ($('#bubbleArea').width());
         BubbleModule.areaHeight = ($('#bubbleArea').height());
 
-        // BubbleModule.setGameBubbleSpeed();
-
         //once the body is loaded render the bubbles
-        $('body').ready(BubbleModule.startBubbleArea());
+        $('body').ready(BubbleModule.startGame());
 
+        GameWindowModule.createEventListeners();
+
+    },
+
+    createEventListeners: function() {
         //if the bubble area is clicked
         $('#bubbleArea').on('click', function(e) {
             //get the click location relative to parent's mouse position
@@ -285,22 +288,55 @@ var GameWindowModule = {
             //check if there's a bubble at mouseX and mouseY
             BubbleModule.checkBubbleLocations(mouseX, mouseY);
         });
-
     }
 
 
 };
 
 var TimerModule = {
-    time: null,
+    //stores start time
+    startTime: null,
+    //stores end time
+    endTime: null,
+    //interval fixes speed randomly increasing as questions go on
+    fpsInt: 0.25,
+    //current time
+    now: null,
+    //previous time updated
+    prev: null,
+    //total elapsed
+    elapsed: null,
 
-    startTimer: function () {
-        // TimerModule.time = new Timer();
+    initTimer: function () {
+        TimerModule.startTime = new Date();
+        TimerModule.prev = TimerModule.startTime;
+    },
+
+    drawTimer: function () {
+        let time = new Date().getTime() - TimerModule.startTime.getTime();
+        let tDate = new Date(time);
+
+        let milli = ('0' + tDate.getMilliseconds()).slice(-2);
+        let sec = ('0' + tDate.getSeconds()).slice(-2);
+        let min = ('0' + tDate.getMinutes()).slice(-2);
+
+        // let time = parseInt((new Date() - TimerModule.startTime)/1000);
+        BubbleModule.context.beginPath();
+        BubbleModule.context.fillStyle = 'black';
+        BubbleModule.context.font = 'bold 20px Consolas';
+
+        BubbleModule.context.fillText(min + ':' + sec + ':' + milli,BubbleModule.areaWidth-75,25);
 
     },
 
     stopTimer: function () {
-
+        TimerModule.endTime = new Date();
+        let time = TimerModule.endTime.getTime() - TimerModule.startTime.getTime();
+        let tDate = new Date(time);
+        let milli = ('0' + tDate.getMilliseconds()).slice(-2);
+        let sec = ('0' + tDate.getSeconds()).slice(-2);
+        let min = ('0' + tDate.getMinutes()).slice(-2);
+        TimerModule.finalTime = min + ':' + sec + ':' + milli;
     },
 
 
@@ -309,8 +345,6 @@ var TimerModule = {
 var BubbleModule = {
     //holds the animation frame id AKA the only way to stop the animation
     animationFrame: null,
-    //pauses the animation when true - used to pause when overlays are flashed
-    paused: false,
     //width of the bubble area
     areaWidth: null,
     //height of the bubble area
@@ -327,21 +361,34 @@ var BubbleModule = {
     radius: 45,
     //ref indexes currently used
     usedRefs: [],
-    //correct ref index,
+    //correct ref index
     correctIndex: null,
+    //previous correct indexes - to prevent the same correct verse from duplicating during gameplay
+    correctIndexArr: [],
     //directional x and y - speed of all bubbles during the game - so they're all the same speed
     dx: 1,
     dy: 1,
+    //flag for first bubble click for each question - used to track wrong/correct verses
+    firstClick: true,
+    //holds indexes of verses that were correct
+    correctQuestArr: [],
+    //holds indexes of verses that were wrong
+    wrongQuestArr: [],
 
-    fpsInt: 0.25,
-    now: null,
-    then: null,
-    elapsed: null,
+    startGame: function() {
+        BubbleModule.animationFrame = null;
+        // BubbleModule.bubbleArray = [];
+        BubbleModule.usedRefs = [];
+        BubbleModule.correctIndex = null;
+        BubbleModule.firstClick = true;
+        BubbleModule.correctQuestArr = [];
+        BubbleModule.correctIndexArr = [];
+        BubbleModule.wrongQuestArr = [];
+        // BubbleModule.currBubbleCount = null;
+        GameWindowModule.currentQuest = 0;
 
-    //randomize the direction the bubble will move (both x and y)
-    setGameBubbleSpeed: function () {
-        BubbleModule.dx = parseInt((Math.random() - 1.5) * 2);
-        BubbleModule.dy = parseInt((Math.random() - 1.5) * 2);
+        TimerModule.initTimer();
+        BubbleModule.startBubbleArea();
     },
 
     restartBubbleArea: function () {
@@ -355,11 +402,8 @@ var BubbleModule = {
 
     resetBubbleArea: function() {
         cancelAnimationFrame(BubbleModule.animationFrame);
-        BubbleModule.animationFrame = null;
-        BubbleModule.bubbleArray = [];
         BubbleModule.usedRefs = [];
         BubbleModule.correctIndex = null;
-        BubbleModule.paused = false;
         BubbleModule.context.clearRect(0, 0, BubbleModule.areaWidth, BubbleModule.areaHeight);
     },
 
@@ -373,8 +417,8 @@ var BubbleModule = {
         //get what's there
         BubbleModule.context= bubbleArea.getContext('2d');
 
-        //reset the bubbleArray length to zero for safety
-        BubbleModule.bubbleArray.length = 0;
+        //reset the bubbleArray for safety
+        BubbleModule.bubbleArray = [];
 
         //total number of tries to get a full set of valid coordinates - helps prevent forever loops
         var maxAttempts = BubbleModule.defaultBubbleCount*10;
@@ -407,8 +451,6 @@ var BubbleModule = {
             maxAttempts -= 1;
         }
 
-        // console.log(points);
-        console.log(BubbleModule.defaultBubbleCount);
 
         //create each bubble using the Circle object
         for (let i = 0; i < BubbleModule.defaultBubbleCount; i++) {
@@ -423,25 +465,26 @@ var BubbleModule = {
                     alert('Ran out of bubble points!');
                     break;
                 }
-                // console.log(coords);
+
                 x = coords.x;
                 y = coords.y;
 
 
                 var ref = BubbleModule.getRandomVerseIndex();
 
+                while (BubbleModule.correctIndex == null) {
+                    ref = BubbleModule.getRandomVerseIndex();
+                }
+
                 //create the Circle with the randomized variables
                 BubbleModule.bubbleArray.push(new Circle(x, y, BubbleModule.dx, BubbleModule.dy, BubbleModule.radius, ref));
             }
         }
 
-        console.log(BubbleModule.bubbleArray);
+        // console.log(BubbleModule.correctIndexArr);
 
         //set the verse text at the bottom of the screen
         $('#correctVerse').text(allVerses[BubbleModule.correctIndex]);
-
-        BubbleModule.then = Date.now();
-        BubbleModule.startTime = BubbleModule.then;
 
         //start the page animation
         BubbleModule.animate();
@@ -467,24 +510,28 @@ var BubbleModule = {
 
     //start the page animation
     animate: function() {
-        // if (! BubbleModule.paused) {
-            //recursively call the animation
-            BubbleModule.animationFrame = requestAnimationFrame(BubbleModule.animate);
+        //recursively call the animation
+        BubbleModule.animationFrame = requestAnimationFrame(BubbleModule.animate);
 
-            BubbleModule.now = Date.now();
-            BubbleModule.elapsed = BubbleModule.now - BubbleModule.then;
+        TimerModule.now = Date.now();
+        TimerModule.elapsed = TimerModule.now - TimerModule.prev;
 
-            if (BubbleModule.elapsed > BubbleModule.fpsInt) {
-                BubbleModule.then = BubbleModule.now - (BubbleModule.elapsed % BubbleModule.fpsInt);
+        //only redraw the bubbles if the fpsInterval (seconds) has elapsed
+        if (TimerModule.elapsed > TimerModule.fpsInt) {
+            //update then to be the
+            TimerModule.prev= TimerModule.now - (TimerModule.elapsed % TimerModule.fpsInt);
 
-                //erase the bubbles drawn
-                BubbleModule.context.clearRect(0, 0, BubbleModule.areaWidth, BubbleModule.areaHeight);
+            //erase the bubbles drawn
+            BubbleModule.context.clearRect(0, 0, BubbleModule.areaWidth, BubbleModule.areaHeight);
 
-                //redraw each bubble using the update function
-                for (let i = 0; i < BubbleModule.bubbleArray.length; i++) {
-                    BubbleModule.bubbleArray[i].update();
-                }
+            //redraw the timer
+            TimerModule.drawTimer();
+
+            //redraw each bubble using the update function
+            for (let i = 0; i < BubbleModule.bubbleArray.length; i++) {
+                BubbleModule.bubbleArray[i].update();
             }
+        }
     },
 
     checkForCollisions: function (thisX, thisY) {
@@ -546,8 +593,10 @@ var BubbleModule = {
 
         BubbleModule.usedRefs.push(verseIndex);
 
-        if (BubbleModule.correctIndex == null) {
+        if ($.inArray(verseIndex, BubbleModule.correctIndexArr) === -1 &&
+            BubbleModule.correctIndex == null) {
             BubbleModule.correctIndex = verseIndex;
+            BubbleModule.correctIndexArr.push(verseIndex);
         }
 
         return verseIndex;
@@ -574,14 +623,12 @@ var BubbleModule = {
 
             //if the mouseX and mouseY are between their corresponding x and y then a bubble was clicked
             if ((mouseX > xMin && mouseX < xMax) && (mouseY > yMin && mouseY < yMax)) {
-                // console.log('bubble ' + index + ' was clicked');
                 BubbleModule.bubbleClicked(index);
 
             }
         }
     },
 
-    //@todo implement what happens to the bubble after it's clicked
     bubbleClicked: function(clickedBubbleIndex) {
         var clickedBubble = BubbleModule.bubbleArray[clickedBubbleIndex];
 
@@ -592,34 +639,41 @@ var BubbleModule = {
 
         if (clickedBubble.verseIndex === BubbleModule.correctIndex) {
             BubbleModule.correctBubbleClicked();
+            if (BubbleModule.firstClick) {
+                BubbleModule.correctQuestArr.push(clickedBubble.verseIndex);
+            }
+            BubbleModule.firstClick = true;
         }
         else {
             BubbleModule.wrongBubbleClicked(clickedBubble.verseIndex);
+            if (BubbleModule.firstClick) {
+                BubbleModule.wrongQuestArr.push(clickedBubble.verseIndex);
+                BubbleModule.firstClick = false;
+            }
         }
+
+
+
     },
 
     wrongBubbleClicked: function (wrongVerseIndex) {
-        // alert('wrong bubble');
-        //@todo show wrong window
         $('#wrongVerse').text(allVerses[wrongVerseIndex]);
         BubbleModule.flashWindow($('#wrongWindow'), $('#gameWindow'));
-
     },
 
     correctBubbleClicked: function () {
-        // alert('correct bubble yay');
-        //@todo show correct window
         BubbleModule.flashWindow($('#correctWindow'), $('#gameWindow'));
 
-        //@todo load next set of bubbles if number of questions haven't been done
         if (GameWindowModule.currentQuest < StartWindowModule.gameNumQuestions) {
             BubbleModule.restartBubbleArea();
         }
         else {
+            TimerModule.stopTimer();
             BubbleModule.stopAnimation();
-            // BubbleModule.resetBubbleArea();
-            alert('game completed');
-            //@todo show score window
+            //have to wait until the gameWindow is displayed again from the flashWindow function
+            setTimeout(function() {
+                ScoreWindowModule.render();
+            }, 1000);
         }
     },
 
@@ -714,11 +768,30 @@ const Circle = function(x, y, dx, dy, radius, ref) {
     }
 };
 
-//@todo these
-var WrongWindowModule = {
-
-};
-
 var ScoreWindowModule = {
+
+    render: function() {
+        $('#gameWindow').css('display', 'none');
+        $('#scoreWindow').css('display', 'block');
+
+        $('#correctVerseCount').text(BubbleModule.correctQuestArr.length);
+
+        $('#wrongVerseCount').text(BubbleModule.wrongQuestArr.length);
+
+        $.each(BubbleModule.wrongQuestArr, function (i, verseIndex) {
+            $('#wrongVerseList').append('<li>' + allRefs[verseIndex] + '</li>');
+        });
+
+        $('#gameTime').text(TimerModule.finalTime);
+
+        $('#playAgain').button();
+
+        $('#playAgain').on('click', function() {
+            $('#scoreWindow').css('display', 'none');
+            $('#gameWindow').css('display', 'block');
+            BubbleModule.startGame();
+        });
+    },
+
 
 };
