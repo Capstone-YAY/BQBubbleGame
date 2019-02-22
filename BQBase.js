@@ -376,6 +376,9 @@ var BubbleModule = {
     wrongQuestArr: [],
 
     startGame: function() {
+        //reset verses misses list on the score window
+        $('#wrongVerseList').empty();
+
         BubbleModule.animationFrame = null;
         // BubbleModule.bubbleArray = [];
         BubbleModule.usedRefs = [];
@@ -788,8 +791,8 @@ var ScoreWindowModule = {
 
         $('#playAgain').on('click', function() {
             $('#scoreWindow').css('display', 'none');
-            $('#gameWindow').css('display', 'block');
-            BubbleModule.startGame();
+            $('#startWindow').css('display', 'block');
+            StartWindowModule.render();
         });
     },
 
