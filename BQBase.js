@@ -7,6 +7,7 @@ $( function() {
 var StartWindowModule = {
     //set when the user clicks the play button
     gameDivision: null,
+    gameVersePart: null,
     gameStartVerse: null,
     gameEndVerse: null,
     gameNumQuestions: null,
@@ -32,6 +33,8 @@ var StartWindowModule = {
     initializeSelectMenus: function() {
         //initialize all the select menus with jquery and make them scrollable
         $("#division").selectmenu();
+
+        $("#versePart").selectmenu();
 
         $("#start_verse").selectmenu()
             .selectmenu("menuWidget")
@@ -87,6 +90,12 @@ var StartWindowModule = {
             VersesModule.populateEndSelectMenu();
             VersesModule.populateQuestNumSelectMenu();
         });
+
+        $( "#verse_part" ).on( "selectmenuselect", function( event, ui ) {
+            let sel = $('#verse_part').val();
+            console.log(sel);
+        });
+
 
         //if someone changes the start verse
         $( "#start_verse" ).on( "selectmenuselect", function( event, ui ) {
@@ -354,7 +363,7 @@ var BubbleModule = {
     //array of Circle objects aka bubbles
     bubbleArray: [],
     //default starting number of bubbles
-    defaultBubbleCount: 2,
+    defaultBubbleCount: 6,
     //total number of bubbles
     currBubbleCount: null,
     //radius for bubbles

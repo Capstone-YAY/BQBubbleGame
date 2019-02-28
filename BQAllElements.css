@@ -1,0 +1,185 @@
+body{
+    /*background: #023647;*/
+}
+
+#container{
+    width: 70%;
+    height: 600px;
+    background-image: url('BQBubbles.jpg');
+    opacity: 20%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: 5px solid red;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    padding-bottom: 100px;
+}
+.overflow
+{
+    overflow: scroll;
+    max-height: 200px;
+    border: 1px silver solid;
+}
+div.options select
+{
+    border: none;
+}
+
+div.options{
+    padding-right: 175px;
+    padding-top: 75px;
+    padding-bottom: 100px;
+    float: right;
+    font-size: 18px;
+}
+
+div .bibleQ{
+    padding-left: 175px;
+    padding-top: 45px;
+    padding-bottom: 40px;
+    text-align: left;
+    color: black;
+    font-family: cursive;
+    font-size: 75px;
+    float: left;
+}
+
+.startbutton{
+    background-color: rgb(65, 189, 224);
+    padding: 16px;
+    border-radius: 30px;
+    color: rgb(12, 78, 183);
+    width: 300px;
+    font-size: 40px;
+    font-family: cursive;
+    box-shadow: 10px 10px rgb(12, 78, 183);
+}
+
+.startbutton:hover {background-color: #023647}
+
+.startbutton:active {
+    background-color: rgb(65, 189, 224);
+    box-shadow: 0 5px rgb(12, 78, 183);
+    transform: translateY(4px);
+}
+
+div .player{
+    border: 2px solid black;
+    text-align: left;
+    color: black;
+    font-family: cursive;
+    font-size: 18px;
+    float: left;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    margin-left: 175px;
+}
+
+fieldset {
+    border: 0;
+}
+
+label {
+    display: block;
+    margin: 30px 0 0 0;
+}
+
+/* Beginning of Game Window elements */
+#wrongWindow, #correctWindow{
+    width: 80%;
+    height: 60%;
+    background-color: red;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    color: white;
+    text-align: center;
+    padding-top: 100px;
+    padding-left: 50px;
+    padding-right: 50px;
+    font-size: 26px;
+}
+
+#gameWindow {
+    height: 95%;
+    width: 100%;
+}
+
+#bubbleBoundary {
+    height: 90%;
+    width: 100%;
+}
+
+#bubbleArea {
+    height: 100%;
+    width: 100%;
+    /*background-image: url('clouds1.png');*/
+    object-fit: cover;
+}
+
+#correctVerse{
+    color: white;
+    /*@todo change to actual blue*/
+    background: #3f3f3f;
+    padding: 25px;
+    /* background-image: url('clouds1.png'); */
+    object-fit: cover;
+    height: auto;
+    width: auto;
+    text-align: center;
+    /*margin-top: 25px;*/
+    /*margin-bottom: 25px;*/
+    margin-left: 50px;
+    margin-right: 50px;
+    font-size: 25px;
+    font-family: "Droid Sans", "arial", "sans serif";
+}
+
+div.secondTenthsExample.values{
+    color: palevioletred;
+}
+
+button {
+    cursor: pointer;
+    font-weight: 700; }
+
+
+/*the following ID tags are for the bubbles that will be in the game window*/
+#bubble1
+{
+    font-family: "Droid Sans", arial, "sans serif";
+    color: rgb(0, 70, 183);
+}
+
+#bubble2
+{
+    font-family: "Droid Sans", arial, "sans serif";
+    color: rgb(0, 70, 183);
+}
+
+#bubble3
+{
+    font-family: "Droid Sans", arial, "sans serif";
+    color: rgb(0, 70, 183);
+}
+
+#bubble4
+{
+    font-family: "Droid Sans", arial, "sans serif";
+    color: rgb(0, 70, 183);
+}
+
+#bubble5
+{
+    font-family: "Droid Sans", arial, "sans serif";
+    color: rgb(0, 70, 183);
+}
+
+#bubble6
+{
+    font-family: "Droid Sans", arial, "sans serif";
+    color: rgb(0, 70, 183);
+}
