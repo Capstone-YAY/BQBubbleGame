@@ -23,6 +23,7 @@ var StartWindowModule = {
     fillDefaultOptions: function() {
         //set the default division so we can initialize everything
         VersesModule.selectedDivisionRefs = VersesModule.getBeginnerRefs();
+        VersesModule.selectedDivisionVerses = VersesModule.getBeginnerVerses();
 
         //get the default options for each menu
         VersesModule.populateStartSelectMenu();
@@ -34,7 +35,7 @@ var StartWindowModule = {
         //initialize all the select menus with jquery and make them scrollable
         $("#division").selectmenu();
 
-        $("#versePart").selectmenu();
+        $("#verse_part").selectmenu();
 
         $("#start_verse").selectmenu()
             .selectmenu("menuWidget")
@@ -74,15 +75,19 @@ var StartWindowModule = {
             //prepare the appropriate verses
             if ($('#division').val() == 'Beginner') {
                 VersesModule.selectedDivisionRefs = VersesModule.getBeginnerRefs();
+                VersesModule.selectedDivisionVerses = VersesModule.getBeginnerVerses();
             }
             if ($('#division').val() == 'Junior') {
                 VersesModule.selectedDivisionRefs = VersesModule.getJuniorRefs();
+                VersesModule.selectedDivisionVerses = VersesModule.getJuniorVerses();
             }
             if ($('#division').val() == 'Int Sr') {
                 VersesModule.selectedDivisionRefs = VersesModule.getIntSrRefs();
+                VersesModule.selectedDivisionVerses = VersesModule.getIntSrVerses();
             }
             if ($('#division').val() == 'Exp Sr') {
                 VersesModule.selectedDivisionRefs = VersesModule.getExpSrRefs();
+                VersesModule.selectedDivisionVerses = VersesModule.getExpSrVerses();
             }
 
             //get the default options for each menu
@@ -90,12 +95,6 @@ var StartWindowModule = {
             VersesModule.populateEndSelectMenu();
             VersesModule.populateQuestNumSelectMenu();
         });
-
-        $( "#verse_part" ).on( "selectmenuselect", function( event, ui ) {
-            let sel = $('#verse_part').val();
-            console.log(sel);
-        });
-
 
         //if someone changes the start verse
         $( "#start_verse" ).on( "selectmenuselect", function( event, ui ) {
@@ -125,8 +124,8 @@ var StartWindowModule = {
         $("#submitButton").on('click', function() {
             TimerModule.time = null;
 
-            // alert("YAY you're ready to play");
             StartWindowModule.gameDivision = $('#division').val();
+            StartWindowModule.gameVersePart = $('#verse_part').val();
             StartWindowModule.gameStartVerse = $('#start_verse').val();
             StartWindowModule.gameEndVerse = $('#end_verse').val();
             StartWindowModule.gameNumQuestions = $('#num_of_questions').val();
@@ -139,63 +138,61 @@ var StartWindowModule = {
 
 var VersesModule = {
     //index that ends the beginner array
-    beginnerArrayIndex: 136,
+//    beginnerArrayIndex: 136,
     //array that holds beginner verse refs
-    beginnerRefs: [],
+    beginnerRefs: begRefs,
+    beginnerVerses: begVerses,
     //index that ends the junior array
-    juniorArrayIndex: 267,
+//    juniorArrayIndex: 267,
     //array that holds junior verse refs
-    juniorRefs: [],
+    juniorRefs: jrRefs,
+    juniorVerses: jrVerses,
     //index that ends the int Sr array
-    intSrArrayIndex: 378,
+//    intSrArrayIndex: 378,
     //array that holds int sr verse refs
-    intSrRefs: [],
+    intSrRefs: intSrRefs,
+    intSrVerses: intSrVerses,
     //expSrArrayIndex is all the verses
-    expSrArrayIndex: allRefs.length,
+//    expSrArrayIndex: allRefs.length,
     //array that holds exp sr verse refs
-    expSrRefs: allRefs,
+    expSrRefs: expSrRefs,
+    expSrVerses: expSrVerses,
 
     //holds the refs for the division that is currently selected
     //changes dynamically when division is changed
     selectedDivisionRefs: null,
+    selectedDivisionVerses: null,
 
     getBeginnerRefs: function() {
-        if (VersesModule.beginnerRefs.length === 0) {
-            for (var i = 0; i < VersesModule.beginnerArrayIndex; i++) {
-                VersesModule.beginnerRefs.push(allRefs[i]);
-            }
-        }
         return VersesModule.beginnerRefs;
     },
 
-    getJuniorRefs: function() {
-        if (VersesModule.juniorRefs.length === 0) {
-            for (var i = 0; i < VersesModule.juniorArrayIndex; i++) {
-                VersesModule.juniorRefs.push(allRefs[i]);
-            }
-        }
+    getBeginnerVerses: function() {
+        return VersesModule.beginnerVerses;
+    },
 
+    getJuniorRefs: function() {
         return VersesModule.juniorRefs;
     },
 
-    getIntSrRefs: function() {
-        if (VersesModule.intSrRefs.length === 0) {
-            for (var i = 0; i < VersesModule.intSrArrayIndex; i++) {
-                VersesModule.intSrRefs.push(allRefs[i]);
-            }
-        }
+    getJuniorVerses: function() {
+        return VersesModule.juniorVerses;
+    },
 
+    getIntSrRefs: function() {
         return VersesModule.intSrRefs;
     },
 
-    getExpSrRefs: function() {
-        if (VersesModule.expSrRefs.length === 0) {
-            for (var i = 0; i < VersesModule.expSrArrayIndex; i++) {
-                VersesModule.expSrRefs.push(allRefs[i]);
-            }
-        }
+    getIntSrVerses: function() {
+        return VersesModule.intSrVerses;
+    },
 
+    getExpSrRefs: function() {
         return VersesModule.expSrRefs;
+    },
+
+    getExpSrVerses: function() {
+        return VersesModule.expSrVerses;
     },
 
     populateStartSelectMenu: function() {
@@ -495,8 +492,10 @@ var BubbleModule = {
 
         // console.log(BubbleModule.correctIndexArr);
 
+        //remove the ref from the verse so they don't see the answer
+        let verse = VersesModule.selectedDivisionVerses[BubbleModule.correctIndex].substr(VersesModule.selectedDivisionVerses[BubbleModule.correctIndex].indexOf(' ')+1);
         //set the verse text at the bottom of the screen
-        $('#correctVerse').text(allVerses[BubbleModule.correctIndex]);
+        $('#correctVerse').text(verse);
 
         //start the page animation
         BubbleModule.animate();
@@ -650,21 +649,19 @@ var BubbleModule = {
         BubbleModule.currBubbleCount--;
 
         if (clickedBubble.verseIndex === BubbleModule.correctIndex) {
-            BubbleModule.correctBubbleClicked();
             if (BubbleModule.firstClick) {
                 BubbleModule.correctQuestArr.push(clickedBubble.verseIndex);
             }
             BubbleModule.firstClick = true;
+            BubbleModule.correctBubbleClicked();
         }
         else {
-            BubbleModule.wrongBubbleClicked(clickedBubble.verseIndex);
             if (BubbleModule.firstClick) {
                 BubbleModule.wrongQuestArr.push(BubbleModule.correctIndex);
                 BubbleModule.firstClick = false;
             }
+            BubbleModule.wrongBubbleClicked(clickedBubble.verseIndex);
         }
-
-
 
     },
 
@@ -677,7 +674,9 @@ var BubbleModule = {
         BubbleModule.flashWindow($('#correctWindow'), $('#gameWindow'));
 
         if (GameWindowModule.currentQuest < StartWindowModule.gameNumQuestions) {
-            BubbleModule.restartBubbleArea();
+            setTimeout(function() {
+                BubbleModule.restartBubbleArea();
+            }, 1000);
         }
         else {
             TimerModule.stopTimer();
@@ -687,6 +686,17 @@ var BubbleModule = {
                 ScoreWindowModule.render();
             }, 1000);
         }
+    },
+
+    flashCorrectWindow() {
+        BubbleModule.stopAnimation();
+        $('#gameWindow').css('display', 'none');
+        $('#correctWindow').css('display', 'block');
+        setTimeout(function() {
+            $('#correctWindow').css('display', 'none');
+            $('#gameWindow').css('display', 'block');
+            BubbleModule.animate();
+        }, 1000);
     },
 
     //flashId is the window
@@ -737,7 +747,7 @@ const Circle = function(x, y, dx, dy, radius, ref) {
         BubbleModule.context.font=(this.radius*.5)+"px Consolas";
         BubbleModule.context.fillStyle = this.textColor;
 
-        BubbleModule.context.fillText(allRefs[this.verseIndex], this.x, this.y);
+        BubbleModule.context.fillText(VersesModule.selectedDivisionRefs[this.verseIndex], this.x, this.y);
     };
 
     //update the x and y then check for collisions before redrawing
@@ -791,7 +801,7 @@ var ScoreWindowModule = {
         $('#wrongVerseCount').text(BubbleModule.wrongQuestArr.length);
 
         $.each(BubbleModule.wrongQuestArr, function (i, verseIndex) {
-            $('#wrongVerseList').append('<li>' + allRefs[verseIndex] + '</li>');
+            $('#wrongVerseList').append('<li>' + VersesModule.selectedDivisionRefs[verseIndex] + '</li>');
         });
 
         $('#gameTime').text(TimerModule.finalTime);
