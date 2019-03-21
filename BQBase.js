@@ -22,8 +22,8 @@ var StartWindowModule = {
 
     fillDefaultOptions: function() {
         //set the default division so we can initialize everything
-        VersesModule.selectedDivisionRefs = VersesModule.getBeginnerRefs();
-        VersesModule.selectedDivisionVerses = VersesModule.getBeginnerVerses();
+        VersesModule.selectedGameRefs = VersesModule.getBeginnerRefs();
+        VersesModule.selectedGameVerses = VersesModule.getBeginnerVersesFull();
 
         //get the default options for each menu
         VersesModule.populateStartSelectMenu();
@@ -74,26 +74,76 @@ var StartWindowModule = {
 
             //prepare the appropriate verses
             if ($('#division').val() == 'Beginner') {
-                VersesModule.selectedDivisionRefs = VersesModule.getBeginnerRefs();
-                VersesModule.selectedDivisionVerses = VersesModule.getBeginnerVerses();
+                VersesModule.selectedGameRefs = VersesModule.getBeginnerRefs();
+                VersesModule.selectedGameVerses = VersesModule.getBeginnerVersesFull();
             }
             if ($('#division').val() == 'Junior') {
-                VersesModule.selectedDivisionRefs = VersesModule.getJuniorRefs();
-                VersesModule.selectedDivisionVerses = VersesModule.getJuniorVerses();
+                VersesModule.selectedGameRefs = VersesModule.getJuniorRefs();
+                VersesModule.selectedGameVerses = VersesModule.getJuniorVersesFull();
             }
             if ($('#division').val() == 'Int Sr') {
-                VersesModule.selectedDivisionRefs = VersesModule.getIntSrRefs();
-                VersesModule.selectedDivisionVerses = VersesModule.getIntSrVerses();
+                VersesModule.selectedGameRefs = VersesModule.getIntSrRefs();
+                VersesModule.selectedGameVerses = VersesModule.getIntSrVersesFull();
             }
             if ($('#division').val() == 'Exp Sr') {
-                VersesModule.selectedDivisionRefs = VersesModule.getExpSrRefs();
-                VersesModule.selectedDivisionVerses = VersesModule.getExpSrVerses();
+                VersesModule.selectedGameRefs = VersesModule.getExpSrRefs();
+                VersesModule.selectedGameVerses = VersesModule.getExpSrVersesFull();
             }
 
             //get the default options for each menu
             VersesModule.populateStartSelectMenu();
             VersesModule.populateEndSelectMenu();
             VersesModule.populateQuestNumSelectMenu();
+        });
+
+        //if someone changes the verse part
+        $( "#verse_part" ).on( "selectmenuselect", function( event, ui ) {
+            if ($('#verse_part').val() == 'wholeVerse') {
+                //prepare the appropriate verses
+                if ($('#division').val() == 'Beginner') {
+                    VersesModule.selectedGameVerses = VersesModule.getBeginnerVersesFull();
+                }
+                if ($('#division').val() == 'Junior') {
+                    VersesModule.selectedGameVerses = VersesModule.getJuniorVersesFull();
+                }
+                if ($('#division').val() == 'Int Sr') {
+                    VersesModule.selectedGameVerses = VersesModule.getIntSrVersesFull();
+                }
+                if ($('#division').val() == 'Exp Sr') {
+                    VersesModule.selectedGameVerses = VersesModule.getExpSrVersesFull();
+                }
+            }
+            else if ($('#verse_part').val() == 'firstHalf') {
+                //prepare the appropriate verses
+                if ($('#division').val() == 'Beginner') {
+                    VersesModule.selectedGameVerses = VersesModule.getBeginnerVersesBeg();
+                }
+                if ($('#division').val() == 'Junior') {
+                    VersesModule.selectedGameVerses = VersesModule.getJuniorVersesBeg();
+                }
+                if ($('#division').val() == 'Int Sr') {
+                    VersesModule.selectedGameVerses = VersesModule.getIntSrVersesBeg();
+                }
+                if ($('#division').val() == 'Exp Sr') {
+                    VersesModule.selectedGameVerses = VersesModule.getExpSrVersesBeg();
+                }
+            }
+            else if ($('#verse_part').val() == 'secondHalf') {
+                //prepare the appropriate verses
+                if ($('#division').val() == 'Beginner') {
+                    VersesModule.selectedGameVerses = VersesModule.getBeginnerVersesEnd();
+                }
+                if ($('#division').val() == 'Junior') {
+                    VersesModule.selectedGameVerses = VersesModule.getJuniorVersesEnd();
+                }
+                if ($('#division').val() == 'Int Sr') {
+                    VersesModule.selectedGameVerses = VersesModule.getIntSrVersesEnd();
+                }
+                if ($('#division').val() == 'Exp Sr') {
+                    VersesModule.selectedGameVerses = VersesModule.getExpSrVersesEnd();
+                }
+            }
+
         });
 
         //if someone changes the start verse
@@ -137,62 +187,112 @@ var StartWindowModule = {
 };
 
 var VersesModule = {
-    //index that ends the beginner array
-//    beginnerArrayIndex: 136,
     //array that holds beginner verse refs
     beginnerRefs: begRefs,
-    beginnerVerses: begVerses,
-    //index that ends the junior array
-//    juniorArrayIndex: 267,
+    //array holds full beginner verses
+    beginnerVersesFull: begVerses,
+    //array holds beginning beginner verses
+    beginnerVersesBeg: begVersesBeg,
+    //array holds ending beginner verses
+    beginnerVersesEnd: begVersesEnd,
+
     //array that holds junior verse refs
     juniorRefs: jrRefs,
-    juniorVerses: jrVerses,
-    //index that ends the int Sr array
-//    intSrArrayIndex: 378,
+    //array holds full junior verses
+    juniorVersesFull: jrVerses,
+    //array holds beginning junior verses
+    juniorVersesBeg: jrVersesBeg,
+    //array holds ending junior verses
+    juniorVersesEnd: jrVersesEnd,
+
     //array that holds int sr verse refs
     intSrRefs: intSrRefs,
-    intSrVerses: intSrVerses,
-    //expSrArrayIndex is all the verses
-//    expSrArrayIndex: allRefs.length,
+    //array holds full int sr verses
+    intSrVersesFull: intSrVerses,
+    //array holds beginning int sr verses
+    intSrVersesBeg: intSrVersesBeg,
+    //array holds ending int sr verses
+    intSrVersesEnd: intSrVersesEnd,
+
     //array that holds exp sr verse refs
     expSrRefs: expSrRefs,
-    expSrVerses: expSrVerses,
+    //array holds full exp sr verses
+    expSrVersesFull: expSrVerses,
+    //array holds beginning int sr verses
+    expSrVersesBeg: expSrVersesBeg,
+    //array holds ending int sr verses
+    expSrVersesEnd: expSrVersesEnd,
 
-    //holds the refs for the division that is currently selected
+    //holds the refs for the division currently selected
     //changes dynamically when division is changed
-    selectedDivisionRefs: null,
-    selectedDivisionVerses: null,
+    selectedGameRefs: null,
+
+    //holds the verses for the division AND verse part currently selected
+    //changes dynamically when division OR verse part is changed
+    selectedGameVerses: null,
 
     getBeginnerRefs: function() {
         return VersesModule.beginnerRefs;
     },
 
-    getBeginnerVerses: function() {
-        return VersesModule.beginnerVerses;
+    getBeginnerVersesFull: function() {
+        return VersesModule.beginnerVersesFull;
+    },
+
+    getBeginnerVersesBeg: function() {
+        return VersesModule.beginnerVersesBeg;
+    },
+
+    getBeginnerVersesEnd: function() {
+        return VersesModule.beginnerVersesEnd;
     },
 
     getJuniorRefs: function() {
         return VersesModule.juniorRefs;
     },
 
-    getJuniorVerses: function() {
-        return VersesModule.juniorVerses;
+    getJuniorVersesFull: function() {
+        return VersesModule.juniorVersesFull;
+    },
+
+    getJuniorVersesBeg: function() {
+        return VersesModule.juniorVersesBeg;
+    },
+
+    getJuniorVersesEnd: function() {
+        return VersesModule.juniorVersesEnd;
     },
 
     getIntSrRefs: function() {
         return VersesModule.intSrRefs;
     },
 
-    getIntSrVerses: function() {
-        return VersesModule.intSrVerses;
+    getIntSrVersesFull: function() {
+        return VersesModule.intSrVersesFull;
+    },
+
+    getIntSrVersesBeg: function() {
+        return VersesModule.intSrVersesBeg;
+    },
+
+    getIntSrVersesEnd: function() {
+        return VersesModule.intSrVersesEnd;
     },
 
     getExpSrRefs: function() {
         return VersesModule.expSrRefs;
     },
 
-    getExpSrVerses: function() {
-        return VersesModule.expSrVerses;
+    getExpSrVersesFull: function() {
+        return VersesModule.expSrVersesFull;
+    },
+
+    getExpSrVersesBeg: function() {
+        return VersesModule.expSrVersesBeg;
+    },
+
+    getExpSrVersesEnd: function() {
+        return VersesModule.expSrVersesEnd;
     },
 
     populateStartSelectMenu: function() {
@@ -202,8 +302,8 @@ var VersesModule = {
         });
 
         //add all the verses as options except the last 10 because the minimum number of questions is 10
-        for(var i = 0; i < VersesModule.selectedDivisionRefs.length-10; i++) {
-            $('#start_verse').append("<option>" + i + " - " + VersesModule.selectedDivisionRefs[i] + "</option>");
+        for(var i = 0; i < VersesModule.selectedGameRefs.length-10; i++) {
+            $('#start_verse').append("<option>" + i + " - " + VersesModule.selectedGameRefs[i] + "</option>");
         }
 
         //refresh after all the options have been added
@@ -219,8 +319,8 @@ var VersesModule = {
         var startVerse = parseInt($('#start_verse').val());
 
         //excluding the 10 questions after the startVerse add all the verses as options
-        for(var i = startVerse + 10; i < VersesModule.selectedDivisionRefs.length; i++) {
-            $('#end_verse').append("<option>" + i + " - " + VersesModule.selectedDivisionRefs[i] + "</option>");
+        for(var i = startVerse + 10; i < VersesModule.selectedGameRefs.length; i++) {
+            $('#end_verse').append("<option>" + i + " - " + VersesModule.selectedGameRefs[i] + "</option>");
         }
 
         //refresh after all the options have been added
@@ -493,7 +593,7 @@ var BubbleModule = {
         // console.log(BubbleModule.correctIndexArr);
 
         //remove the ref from the verse so they don't see the answer
-        let verse = VersesModule.selectedDivisionVerses[BubbleModule.correctIndex].substr(VersesModule.selectedDivisionVerses[BubbleModule.correctIndex].indexOf(' ')+1);
+        let verse = VersesModule.selectedGameVerses[BubbleModule.correctIndex].substr(VersesModule.selectedGameVerses[BubbleModule.correctIndex].indexOf(' ')+1);
         //set the verse text at the bottom of the screen
         $('#correctVerse').text(verse);
 
@@ -747,7 +847,7 @@ const Circle = function(x, y, dx, dy, radius, ref) {
         BubbleModule.context.font=(this.radius*.5)+"px Consolas";
         BubbleModule.context.fillStyle = this.textColor;
 
-        BubbleModule.context.fillText(VersesModule.selectedDivisionRefs[this.verseIndex], this.x, this.y);
+        BubbleModule.context.fillText(VersesModule.selectedGameRefs[this.verseIndex], this.x, this.y);
     };
 
     //update the x and y then check for collisions before redrawing
@@ -801,7 +901,7 @@ var ScoreWindowModule = {
         $('#wrongVerseCount').text(BubbleModule.wrongQuestArr.length);
 
         $.each(BubbleModule.wrongQuestArr, function (i, verseIndex) {
-            $('#wrongVerseList').append('<li>' + VersesModule.selectedDivisionRefs[verseIndex] + '</li>');
+            $('#wrongVerseList').append('<li>' + VersesModule.selectedGameRefs[verseIndex] + '</li>');
         });
 
         $('#gameTime').text(TimerModule.finalTime);
