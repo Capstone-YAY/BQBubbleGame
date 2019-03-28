@@ -10,11 +10,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BQBase.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="369">
-              <caret line="187" lean-forward="true" selection-start-line="187" selection-end-line="187" />
+            <state relative-caret-position="206">
+              <caret line="768" column="65" selection-start-line="768" selection-start-column="65" selection-end-line="768" selection-end-column="65" />
               <folding>
                 <element signature="e#15#51#0" />
               </folding>
@@ -22,11 +22,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/BQWindow.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="512">
-              <caret line="35" column="41" selection-start-line="35" selection-start-column="31" selection-end-line="35" selection-end-column="41" />
+            <state relative-caret-position="187">
+              <caret line="71" column="26" lean-forward="true" selection-start-line="71" selection-start-column="26" selection-end-line="71" selection-end-column="26" />
               <folding>
                 <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -56,9 +56,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>resetBubb</find>
-      <find>setgamebu</find>
-      <find>bubblemodule.dx</find>
       <find>dx</find>
       <find>fpsint</find>
       <find>now</find>
@@ -86,6 +83,9 @@
       <find>selectedDivisionRefs</find>
       <find>gameversepart</find>
       <find>amen</find>
+      <find>wrongVerse</find>
+      <find>allVerses</find>
+      <find>allVersesa</find>
     </findStrings>
     <replaceStrings>
       <replace>bubble</replace>
@@ -114,16 +114,15 @@
         <option value="$PROJECT_DIR$/versesintsr.js" />
         <option value="$PROJECT_DIR$/versesexpsr.js" />
         <option value="$PROJECT_DIR$/new_verses.js" />
-        <option value="$PROJECT_DIR$/BQWindow.html" />
         <option value="$PROJECT_DIR$/BQBase.js" />
+        <option value="$PROJECT_DIR$/BQWindow.html" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="585" />
-    <option name="y" value="-10" />
-    <option name="width" value="980" />
-    <option name="height" value="1040" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="952" />
+    <option name="width" value="977" />
+    <option name="height" value="1038" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -206,16 +205,18 @@
       <workItem from="1551390811126" duration="4932000" />
       <workItem from="1553201566829" duration="7928000" />
       <workItem from="1553210541702" duration="1236000" />
+      <workItem from="1553806256206" duration="764000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="108223000" />
+    <option name="totallyTimeSpent" value="108987000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <frame x="762" y="0" width="781" height="830" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14362416" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.30097088" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -321,18 +322,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BQWindow.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="512">
-          <caret line="35" column="41" selection-start-line="35" selection-start-column="31" selection-end-line="35" selection-end-column="41" />
-          <folding>
-            <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#4;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/new_verses.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
@@ -342,10 +331,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/BQBase.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="187" lean-forward="true" selection-start-line="187" selection-end-line="187" />
+        <state relative-caret-position="206">
+          <caret line="768" column="65" selection-start-line="768" selection-start-column="65" selection-end-line="768" selection-end-column="65" />
           <folding>
             <element signature="e#15#51#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BQWindow.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="71" column="26" lean-forward="true" selection-start-line="71" selection-start-column="26" selection-end-line="71" selection-end-column="26" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#4;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>

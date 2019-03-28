@@ -766,7 +766,7 @@ var BubbleModule = {
     },
 
     wrongBubbleClicked: function (wrongVerseIndex) {
-        $('#wrongVerse').text(allVerses[wrongVerseIndex]);
+        $('#wrongVerse').text(allRefs[wrongVerseIndex] + ' - ' + allVerses[wrongVerseIndex]);
         BubbleModule.flashWindow($('#wrongWindow'), $('#gameWindow'));
     },
 
