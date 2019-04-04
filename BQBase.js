@@ -172,15 +172,20 @@ var StartWindowModule = {
 
         //if someone clicks play
         $("#submitButton").on('click', function() {
-            TimerModule.time = null;
+            if ($('#username').val() != '' && $('#password').val() != '') {
+                DatabaseModule.checkLogin();
+            }
+            else {
+                TimerModule.time = null;
 
-            StartWindowModule.gameDivision = $('#division').val();
-            StartWindowModule.gameVersePart = $('#verse_part').val();
-            StartWindowModule.gameStartVerse = $('#start_verse').val();
-            StartWindowModule.gameEndVerse = $('#end_verse').val();
-            StartWindowModule.gameNumQuestions = $('#num_of_questions').val();
+                StartWindowModule.gameDivision = $('#division').val();
+                StartWindowModule.gameVersePart = $('#verse_part').val();
+                StartWindowModule.gameStartVerse = $('#start_verse').val();
+                StartWindowModule.gameEndVerse = $('#end_verse').val();
+                StartWindowModule.gameNumQuestions = $('#num_of_questions').val();
 
-            GameWindowModule.render();
+                GameWindowModule.render();
+            }
         });
     }
 
@@ -914,6 +919,32 @@ var ScoreWindowModule = {
             StartWindowModule.render();
         });
     },
+
+
+};
+
+var DatabaseModule = {
+    checkLogin: function() {
+        let username = $('#username').val();
+        let password = $('#password').val();
+        console.log(username);
+        console.log(password);
+        $.ajax({
+            url: 'php/checkLogin.php',
+            type: 'POST',
+            data: {
+                'u': username,
+                'p': password
+            },
+            success: function(response) {
+                console.log(response);
+                alert(response);
+            }
+        })
+    }
+
+
+
 
 
 };

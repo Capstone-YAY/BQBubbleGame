@@ -43,7 +43,7 @@ $query="SELECT rank, name, numc, avgtime FROM (SELECT @N := @N +1 AS rank, name,
 //echo($query);
 $result2= mysql_query($query,$linkID) or die("Data not found.");
 for($x = 0 ; $x < mysql_num_rows($result2) ; $x++){
-    $row = mysql_fetch_assoc($result2);
+    $raow = mysql_fetch_assoc($result2);
 	printf ("%s\t%s\t%3.0f correct\t\t%5.3f s/v\n", $row['rank'], $row['name'], $row['numc'], $row['avgtime']);
 	//echo "".$row['rank']."\t\t".$row['name']."\t\t".$row['pc']."\t\t".$row['avgtime']."\n";
 }

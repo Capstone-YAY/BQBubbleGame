@@ -11,8 +11,8 @@
  */
  
 define("DBM_SERVER", "localhost");
-define("DBM_USER", "your mysql username here");
-define("DBM_PASS", "your password");
-define("DBM_NAME", "your mysql database name");
+define("DBM_USER", "root");
+define("DBM_PASS", "");
+define("DBM_NAME", "blah");
 
 ?>
