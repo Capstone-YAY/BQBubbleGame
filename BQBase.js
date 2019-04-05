@@ -172,18 +172,23 @@ var StartWindowModule = {
 
         //if someone clicks play
         $("#submitButton").on('click', function() {
-            if ($('#username').val() != '' && $('#password').val() != '') {
-                DatabaseModule.checkLogin();
+            TimerModule.time = null;
+
+            StartWindowModule.gameDivision = $('#division').val();
+            StartWindowModule.gameVersePart = $('#verse_part').val();
+            StartWindowModule.gameStartVerse = $('#start_verse').val();
+            StartWindowModule.gameEndVerse = $('#end_verse').val();
+            StartWindowModule.gameNumQuestions = $('#num_of_questions').val();
+
+            if ($('#username').val() != '' || $('#password').val() != '') {
+                if ($('#username').val() != '' && $('#password').val() != '') {
+                    DatabaseModule.checkLogin();
+                }
+                else {
+                    alert('You must BOTH a username and password to login');
+                }
             }
             else {
-                TimerModule.time = null;
-
-                StartWindowModule.gameDivision = $('#division').val();
-                StartWindowModule.gameVersePart = $('#verse_part').val();
-                StartWindowModule.gameStartVerse = $('#start_verse').val();
-                StartWindowModule.gameEndVerse = $('#end_verse').val();
-                StartWindowModule.gameNumQuestions = $('#num_of_questions').val();
-
                 GameWindowModule.render();
             }
         });
@@ -924,6 +929,8 @@ var ScoreWindowModule = {
 };
 
 var DatabaseModule = {
+    loggedIn: false,
+
     checkLogin: function() {
         let username = $('#username').val();
         let password = $('#password').val();
@@ -937,8 +944,17 @@ var DatabaseModule = {
                 'p': password
             },
             success: function(response) {
-                console.log(response);
-                alert(response);
+                if (response == 'Success') {
+                    alert('logged in');
+                    DatabaseModule.loggedIn = true;
+                    GameWindowModule.render();
+                }
+                else if (response == 'Could not connect.  Check back later.') {
+                    alert('Could not connect.  Check back later.');
+                }
+                else {
+                    alert('incorrect username or password');
+                }
             }
         })
     }

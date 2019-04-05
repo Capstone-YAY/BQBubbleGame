@@ -20,8 +20,9 @@ try {
     WHERE name = :username";
 
     $stmt = $database->prepare($sql);
-    $stmt->bindValue(":username", $guser);
-    $results = $stmt->execute();
+    $stmt->bindParam(":username", $guser);
+    $stmt->execute();
+    $results = $stmt->fetch(PDO::FETCH_ASSOC);
     if (! $results) {
         error_log("Invalid user\n", 3, "error.log");
         echo 'Invalid username';
@@ -36,7 +37,9 @@ try {
         $stmt = $database->prepare($sql);
         $stmt->bindValue(":username", $guser);
         $stmt->bindValue(":password", $gpass);
-        $results = $stmt->execute();
+        $stmt->execute();
+
+        $results = $stmt->fetch(PDO::FETCH_ASSOC);
         if (! $results) {
             error_log("Invalid password\n", 3, "error.log");
             echo 'Invalid password';
