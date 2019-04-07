@@ -350,6 +350,8 @@ var VersesModule = {
         endVerse = parseInt($('#end_verse').val());
         var verseDif = endVerse - startVerse;
 
+        // $('#num_of_questions').append("<option>" + 3 + "</option>");
+
         //count from startVerse number to endVerse and if the number is divisible by 10 and is not 0 then add it as an option
         for(var i = startVerse; i <= endVerse; i++) {
             if (i % 10 == 0 && i != 0)
@@ -494,6 +496,8 @@ var BubbleModule = {
     startGame: function() {
         //reset verses misses list on the score window
         $('#wrongVerseList').empty();
+        $('#overallScoreList').empty();
+        $('#userScoreList').empty();
 
         BubbleModule.animationFrame = null;
         // BubbleModule.bubbleArray = [];
@@ -798,17 +802,6 @@ var BubbleModule = {
         }
     },
 
-    flashCorrectWindow() {
-        BubbleModule.stopAnimation();
-        $('#gameWindow').css('display', 'none');
-        $('#correctWindow').css('display', 'block');
-        setTimeout(function() {
-            $('#correctWindow').css('display', 'none');
-            $('#gameWindow').css('display', 'block');
-            BubbleModule.animate();
-        }, 1000);
-    },
-
     //flashId is the window
     flashWindow(flashId, origId) {
         BubbleModule.stopAnimation();
@@ -906,6 +899,8 @@ var ScoreWindowModule = {
         $('#gameWindow').css('display', 'none');
         $('#scoreWindow').css('display', 'block');
 
+        DatabaseModule.logScore();
+
         $('#correctVerseCount').text(BubbleModule.correctQuestArr.length);
 
         $('#wrongVerseCount').text(BubbleModule.wrongQuestArr.length);
@@ -930,12 +925,12 @@ var ScoreWindowModule = {
 
 var DatabaseModule = {
     loggedIn: false,
+    scoreTimestamp: null,
 
     checkLogin: function() {
         let username = $('#username').val();
         let password = $('#password').val();
-        console.log(username);
-        console.log(password);
+
         $.ajax({
             url: 'php/checkLogin.php',
             type: 'POST',
@@ -950,15 +945,108 @@ var DatabaseModule = {
                     GameWindowModule.render();
                 }
                 else if (response == 'Could not connect.  Check back later.') {
-                    alert('Could not connect.  Check back later.');
+                    DatabaseModule.renderLoginInfoWindow('Could not connect.  Check back later.');
                 }
                 else {
-                    alert('incorrect username or password');
+                    DatabaseModule.renderLoginInfoWindow('incorrect username or password');
                 }
             }
-        })
-    }
+        });
+    },
 
+    renderLoginInfoWindow: function(text) {
+        $('#startWindow').css('display', 'none');
+        $('#loginInfoWindow').css('display', 'block');
+
+        $('#loginInfo').text(text);
+
+        $('#backButton').on('click', function() {
+            $('#loginInfoWindow').css('display', 'none');
+            $('#startWindow').css('display', 'block');
+        });
+    },
+
+    logScore: function() {
+        DatabaseModule.scoreTimestamp = Math.round(new Date().getTime());
+
+        let numCorrect = BubbleModule.correctQuestArr.length;
+        let numWrong = BubbleModule.wrongQuestArr.length;
+        let time = TimerModule.finalTime;
+        let numQuest = StartWindowModule.gameNumQuestions;
+
+        let wrongVerseRefs = [];
+        $.each(BubbleModule.wrongQuestArr, function(i, val) {
+            wrongVerseRefs.push(VersesModule.selectedGameRefs[val]);
+        });
+
+        let correctVerseRefs = [];
+        $.each(BubbleModule.correctQuestArr, function(i, val) {
+            correctVerseRefs.push(VersesModule.selectedGameRefs[val]);
+        });
+
+        //@todo get score variable
+        let score = 0;
+
+        $.ajax({
+            url: 'php/logScore.php',
+            type: 'POST',
+            data: {
+                'numQuest': numQuest,
+                'time': time,
+                'timestamp': DatabaseModule.scoreTimestamp,
+                'numCorrect': numCorrect,
+                'numWrong': numWrong,
+                'correctVerseRefs': correctVerseRefs,
+                'wrongVerseRefs': wrongVerseRefs,
+                'score': score
+            },
+            success: function(response) {
+                console.log(response);
+
+                DatabaseModule.getScoreRanks();
+            }
+        });
+    },
+
+    getScoreRanks: function() {
+        let numCorrect = BubbleModule.correctQuestArr.length;
+        let numWrong = BubbleModule.wrongQuestArr.length;
+        let time = TimerModule.finalTime;
+        let numQuest = StartWindowModule.gameNumQuestions;
+
+        //@todo get score variable
+        let score = 0;
+
+        $.ajax({
+            url: 'php/getScoreRank.php',
+            type: 'POST',
+            datatype: 'json',
+            data: {
+                'numQuest': numQuest,
+                'time': time,
+                'timestamp': DatabaseModule.scoreTimestamp,
+                'numCorrect': numCorrect,
+                'numWrong': numWrong,
+                'score': score
+            },
+            success: function(response) {
+                let data = JSON.parse(response);
+
+                $('#userRank').text(data.userRank);
+                $('#totalGames').text(data.totalGames);
+
+                $.each(data.overallScores, function (i, val) {
+                    $('#overallScoreList').append('<li>' + val.rank + ' ' + val.name + ' ' + val.numCorrect +
+                        ' correct ' + val.avgTime + ' s/v' + '</li>');
+                });
+
+                $.each(data.userBestScores, function (i, val) {
+                    $('#userScoreList').append('<li>' + val.rank + ' ' + val.name + ' ' + val.numCorrect +
+                        ' correct ' + val.avgTime + ' s/v' + '</li>');
+                });
+            }
+        });
+    },
 
 
 
