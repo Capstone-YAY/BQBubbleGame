@@ -2,80 +2,83 @@ body{
     background: #023647;
 }
 
-#container{
-    width: 70%;
+  .container{
+    width: 80%;
     height: 600px;
     background-image: url('BQBubbles.jpg');
     opacity: 20%;
     background-repeat: no-repeat;
     background-size: cover;
-    border: 5px solid red;
+    border: 5px solid silver;
     margin-left: auto;
     margin-right: auto;
     margin-top: 50px;
+    margin-bottom: 50px;
     padding-bottom: 100px;
 }
+
+.creaters{
+    position: absolute;
+    bottom: 20px;
+    color: white;
+    text-align: center;
+    font-family: cursive;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+#startWindow > div {
+    width: 80%;
+    height: 100%;
+  }
+
+#startWindow {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding-top: 3%; 
+  }
+
+.startWindowDiv{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    margin-left: 3%;
+    margin-right: 2%;
+}
+
+.bibleQ{
+    font-size: 115px;
+    font-family: cursive;
+    font-weight: bold;
+    text-shadow:9px 2px 2px #0d88b1;
+    text-align: center;
+    margin-top: 50px;
+    margin-left: 30px;
+}
+
 .overflow
 {
     overflow: scroll;
     max-height: 200px;
     border: 1px silver solid;
 }
-div.options select
+
+.options select
 {
     border: none;
 }
 
-div.options{
-    padding-right: 175px;
-    padding-top: 75px;
-    padding-bottom: 100px;
-    float: right;
-    font-size: 18px;
-}
-
-div .bibleQ{
-    padding-left: 175px;
-    padding-top: 45px;
-    padding-bottom: 40px;
+.options{
+    padding: 6%;
+    margin-top: 5px;
+    margin-bottom: 5px;
     text-align: left;
-    color: black;
-    font-family: cursive;
-    font-size: 75px;
-    float: left;
-}
-
-.startbutton{
-    background-color: rgb(65, 189, 224);
-    padding: 16px;
-    border-radius: 30px;
-    color: rgb(12, 78, 183);
-    width: 300px;
-    font-size: 40px;
-    font-family: cursive;
-    box-shadow: 10px 10px rgb(12, 78, 183);
-}
-
-.startbutton:hover {background-color: #023647}
-
-.startbutton:active {
-    background-color: rgb(65, 189, 224);
-    box-shadow: 0 5px rgb(12, 78, 183);
-    transform: translateY(4px);
-}
-
-div .player{
-    border: 2px solid black;
-    text-align: left;
-    color: black;
-    font-family: cursive;
     font-size: 18px;
-    float: left;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 25px;
-    padding-bottom: 25px;
-    margin-left: 175px;
+    font-family: cursive;
 }
 
 fieldset {
@@ -87,11 +90,70 @@ label {
     margin: 30px 0 0 0;
 }
 
+.player{
+    margin-top: 135px;
+    border: 2px solid black;
+    text-align: center;
+    color: black;
+    font-family: cursive;
+    font-weight: bold;
+    font-size: 20px;
+    margin-right: 40px;
+    padding: 20px;
+}
+
+.startButtonDiv{
+    position: absolute;
+    bottom: 45px;
+}
+
+.startButton { /* styling for the "Play Again" button */
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #84acfa), color-stop(1, #0e357d));
+	background:-moz-linear-gradient(top, #84acfa 5%, #0e357d 100%);
+	background:-webkit-linear-gradient(top, #84acfa 5%, #0e357d 100%);
+	background:-o-linear-gradient(top, #84acfa 5%, #0e357d 100%);
+	background:-ms-linear-gradient(top, #84acfa 5%, #0e357d 100%);
+	background:linear-gradient(to bottom, #84acfa 5%, #0e357d 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#84acfa', endColorstr='#0e357d',GradientType=0);
+	background-color:#84acfa;
+	-moz-border-radius:52px;
+	-webkit-border-radius:52px;
+	border-radius: 52px;
+	border:3px solid #313fd4;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family: cursive;
+	font-size: 36px;
+	font-weight:bold;
+	padding:8px 100px;
+	text-decoration:none;
+    text-shadow:0px 1px 7px #000000;
+}
+
+.startButton { /* styling for when the player's mouse hovers over the button */
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #0e357d), color-stop(1, #84acfa));
+	background:-moz-linear-gradient(top, #0e357d 5%, #84acfa 100%);
+	background:-webkit-linear-gradient(top, #0e357d 5%, #84acfa 100%);
+	background:-o-linear-gradient(top, #0e357d 5%, #84acfa 100%);
+	background:-ms-linear-gradient(top, #0e357d 5%, #84acfa 100%);
+	background:linear-gradient(to bottom, #0e357d 5%, #84acfa 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0e357d', endColorstr='#84acfa',GradientType=0);
+	background-color:#0e357d;
+}
+
+.startButton { /* this is for positioning the button */
+    margin-top: 700px;
+    margin-left: 40%;
+    margin-right: 40%;
+}
+
+
 /* Beginning of Game Window elements */
-#wrongWindow, #correctWindow{
-    width: 80%;
-    height: 60%;
-    background-color: red;
+#correctWindow{
+    width: 55%;
+    height: 40%;
+    background-color: rgb(0, 125, 0);
     margin-top: 100px;
     margin-left: auto;
     margin-right: auto;
@@ -100,6 +162,21 @@ label {
     padding-top: 100px;
     padding-left: 50px;
     padding-right: 50px;
+    font-size: 26px;
+}
+
+#wrongWindow{
+    width: 55%;
+    height: 40%;
+    background-color: rgb(196, 33, 33);
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    color: white;
+    text-align: center;
+    padding-top: 50px;
+    padding-left: 125px;
+    padding-right: 125px;
     font-size: 26px;
 }
 
@@ -116,21 +193,17 @@ label {
 #bubbleArea {
     height: 100%;
     width: 100%;
-    /*background-image: url('clouds1.png');*/
     object-fit: cover;
 }
 
 #correctVerse{
     color: white;
-    background: #3f3f3f;
+    background: #023647;
     padding: 25px;
-    /* background-image: url('clouds1.png'); */
     object-fit: cover;
     height: auto;
     width: auto;
     text-align: center;
-    /*margin-top: 25px;*/
-    /*margin-bottom: 25px;*/
     margin-left: 50px;
     margin-right: 50px;
     font-size: 25px;
@@ -143,42 +216,155 @@ div.secondTenthsExample.values{
 
 button {
     cursor: pointer;
-    font-weight: 700; }
+    font-weight: 700; 
+}
 
-/*this is set in the javascript*/
-/*the following ID tags are for the bubbles that will be in the game window*/
-/*#bubble1*/
-/*{*/
-    /*font-family: "Droid Sans", arial, "sans serif";*/
-    /*color: rgb(0, 70, 183);*/
-/*}*/
+/* All the score elements for the final page */
 
-/*#bubble2*/
-/*{*/
-    /*font-family: "Droid Sans", arial, "sans serif";*/
-    /*color: rgb(0, 70, 183);*/
-/*}*/
+#gameOver /* this just styles the "Game Over" text that will show up once the levels are completed */
+{
+    font-size: 100px;
+    font-family: cursive;
+    font-weight: bold;
+    padding: 2%;
+    margin-top: 0%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 0%;
+    height: auto;
+    width: auto;
+    text-align: center;
+    text-shadow:9px 2px 2px #0d88b1;
+}
 
-/*#bubble3*/
-/*{*/
-    /*font-family: "Droid Sans", arial, "sans serif";*/
-    /*color: rgb(0, 70, 183);*/
-/*}*/
+#playAgainDiv{
+    display: flex;
+    justify-content: center;
+}
+#playAgain{ /* styling for the "Play Again" button */
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #84acfa), color-stop(1, #0e357d));
+	background:-moz-linear-gradient(top, #84acfa 5%, #0e357d 100%);
+	background:-webkit-linear-gradient(top, #84acfa 5%, #0e357d 100%);
+	background:-o-linear-gradient(top, #84acfa 5%, #0e357d 100%);
+	background:-ms-linear-gradient(top, #84acfa 5%, #0e357d 100%);
+	background:linear-gradient(to bottom, #84acfa 5%, #0e357d 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#84acfa', endColorstr='#0e357d',GradientType=0);
+	background-color:#84acfa;
+	-moz-border-radius:52px;
+	-webkit-border-radius:52px;
+	border-radius: 52px;
+	border:3px solid #313fd4;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family: cursive;
+	font-size: 30px;
+	font-weight:bold;
+	padding:8px 39px;
+	text-decoration:none;
+    text-shadow:0px 1px 7px #000000;
+}
 
-/*#bubble4*/
-/*{*/
-    /*font-family: "Droid Sans", arial, "sans serif";*/
-    /*color: rgb(0, 70, 183);*/
-/*}*/
+#playAgain:hover { /* styling for when the player's mouse hovers over the button */
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #0e357d), color-stop(1, #84acfa));
+	background:-moz-linear-gradient(top, #0e357d 5%, #84acfa 100%);
+	background:-webkit-linear-gradient(top, #0e357d 5%, #84acfa 100%);
+	background:-o-linear-gradient(top, #0e357d 5%, #84acfa 100%);
+	background:-ms-linear-gradient(top, #0e357d 5%, #84acfa 100%);
+	background:linear-gradient(to bottom, #0e357d 5%, #84acfa 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0e357d', endColorstr='#84acfa',GradientType=0);
+	background-color:#0e357d;
+}
 
-/*#bubble5*/
-/*{*/
-    /*font-family: "Droid Sans", arial, "sans serif";*/
-    /*color: rgb(0, 70, 183);*/
-/*}*/
+#playAgain:active{ /* this is for positioning the button */
+	position: center;
+    top:1px;
+}
 
-/*#bubble6*/
-/*{*/
-    /*font-family: "Droid Sans", arial, "sans serif";*/
-    /*color: rgb(0, 70, 183);*/
-/*}*/
+.flex-container > div {
+    width: 70%;
+    height: 100%;
+  }
+
+.flex-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding-top: 1%; 
+  }
+
+.flex-containerDiv1{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+
+.score{ /* styling for the box that will show the amount of verses missed, and verses gotten correct */
+    padding: 5%;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    text-align: center;
+    font-size: 35px;
+    font-family: cursive;
+    flex-grow: 1;
+    text-shadow:2px 2px 3px #0b7092;
+}
+
+.time{ /* styling for the box that will show the total time it took for the player to complete the levels */
+    padding: 5%;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    text-align: center;
+    font-size: 30px;
+    font-family: cursive;
+    flex-grow: 1;
+    text-shadow:2px 2px 3px #023647;
+} 
+
+.missed { /* styling for the box that shows the specific verses missed by the player */
+    flex-grow: 1;
+    padding: 5%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+    font-size: 18px;
+    font-family: cursive;
+}
+
+.rank{ /* styling for where the rank of the player will be shown */
+    flex-grow: 1;
+    padding-top: 5%;   
+    padding-bottom: 5%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    text-align: center;
+    font-size: 30px;
+    font-family: cursive;
+    text-shadow:2px 2px 3px #023647;
+}
+
+.bestScores{ /* styling for where the best scores of the player will be shown */
+    flex-grow: 1;
+    padding: 5%;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    text-align: left;
+    font-size: 18px;
+    font-family: cursive;
+}
+
+.ovScores{ /* styling for where the total scores of all the registered plays will be shown*/
+    flex-grow: 1;
+    padding: 5%;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    text-align: left;
+    font-size: 18px;
+    font-family: cursive;
+}
+
