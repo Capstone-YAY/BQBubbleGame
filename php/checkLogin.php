@@ -8,7 +8,6 @@
 
 //used in place of userxml.php
 
-session_start();
 
 $guser = $_POST['u'];
 $gpass = $_POST['p'];
@@ -16,11 +15,9 @@ $gpass = $_POST['p'];
 include("../constants2.php");
 
 try {
-    //connect to database
     $database = new PDO("mysql:host=" . DBM_SERVER . ";dbname=" . DBM_NAME,
         DBM_USER, DBM_PASS);
 
-    //check if username exists
     $sql = "SELECT * 
     FROM game_users 
     WHERE name = :username";
@@ -35,7 +32,7 @@ try {
         return;
     }
     else {
-        //check password for username
+        //check password
         $sql = "SELECT * 
     FROM game_users 
     WHERE name = :username and pass = :password";
@@ -55,7 +52,7 @@ try {
             //add bubble blast game flag
             $results['game'] = 'bb';
             $_SESSION['bqQuizUser'] = $results;
-            //available info from above variable - for reference
+            // var_dump($_SESSION['bqQuizUser']);
             //  'name' => string '' (length=4)
             //  'pass' => string '' (length=8)
             //  'email' => string '' (length=14)

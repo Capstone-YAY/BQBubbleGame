@@ -74,11 +74,6 @@
 
     </div> <!--startWindow div-->
 
-    <div id="loginInfoWindow" style="display: none;">
-        <span id="loginInfo"></span>
-        <button id="backButton">Back</button>
-    </div>
-
     <div id="gameWindow" style="display: none;">
         <div id="bubbleBoundary">
             <canvas id="bubbleArea">
@@ -115,25 +110,15 @@
             <!-- This is to display the total time it took for the player to complete all of the questions -->
         </div>
         <div class = "rank">
-            You are ranked
-            <span id="userRank"></span>
-            out of
-            <span id="totalGames"> </span>
-            total games played.
+            You are ranked x out of x total games played.
             <!-- This shows the rank of the player, i.e. "You are rank [x] out of [y] total games played." -->
         </div>
         <div class = "ovScores">
             Overall Score:
-            <ul id="overallScoreList">
-
-            </ul>
             <!-- This shows the overall best scores of everyone who has created an account -->
         </div>
         <div class = "bestScores">
             Best Scores:
-            <ul id="userScoreList">
-
-            </ul>
             <!-- This shows the player's best scores -->
         </div>
         <div class = "missed">

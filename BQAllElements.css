@@ -198,7 +198,12 @@ label {
 
 #correctVerse{
     color: white;
+<<<<<<< HEAD
     background: #023647;
+=======
+    /*@todo change to actual blue*/
+    background: #3f3f3f;
+>>>>>>> parent of dc09e07... db stuff seems to work
     padding: 25px;
     object-fit: cover;
     height: auto;
