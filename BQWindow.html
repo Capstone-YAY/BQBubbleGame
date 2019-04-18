@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="jquery-style.css">
     <link rel="stylesheet" href="BQAllElements.css">
-
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="verses.js"></script>
@@ -14,12 +13,14 @@
     <script src="BQBase.js"></script>
 </head>
 <body>
-<div id="container">
+<div class="container">
     <div id="startWindow">
+<div class="startWindowDiv">      
         <div class="bibleQ">
             BQ <br> Bubble <br> Blast
         </div><!--bibleQ div-->
-
+</div><!--startButtonDiv-->  
+<div class="startWindowDiv">
         <div class="options">
             <label for="division"> Select a Division </label>
             <select name="division" id="division">
@@ -50,34 +51,25 @@
             <select name="num_of_questions" id="num_of_questions">
                 <option id="numEmptyOption" />
             </select>
-
-            <br><br><br>
-
-            <input class="startbutton" type="submit" id="submitButton" value="Play">
-
         </div><!--options div-->
+</div><!--startWindowDiv-->
 
-        <div id="loginDiv">
-            <!--most likely going to be a form, for people to sign-in-->
-            <!--<form action="login.php" method="POST">-->
-            <div class="player">
-                Optional (Sign-in not required)
-                <br><br>
-                Username: <input type="text" name="username" id="username" size="15"/>
-                <br><br>
-                Password: <input type="text" name="password" id="password" size="15"/>
-                <br><br>
-                *By signing in, your high scores <br>and performance will be saved
+<div class="player">
+    <!--most likely going to be a form, for people to sign-in-->
+    <!--<form action="login.php" method="POST">-->
+        Optional (Sign-in not required)
+        <br><br>
+        Username: <input type="text" name="username" size="20"/>
+        <br><br>
+        Password: <input type="text" name="password" size="20"/>
+        <br><br>
+        *By signing in, your high scores <br>and performance will be saved
+    </div><!--player-->
+    <!--</form>-->
+<div class="startButtonDiv">
+                <input class="startButton" type="submit" id="submitButton" value="Play">
             </div>
-            <!--</form>-->
-        </div><!--login div-->
-
-    </div> <!--startWindow div-->
-
-    <div id="loginInfoWindow" style="display: none;">
-        <span id="loginInfo"></span>
-        <button id="backButton">Back</button>
-    </div>
+</div><!--startWindow-->
 
     <div id="gameWindow" style="display: none;">
         <div id="bubbleBoundary">
@@ -95,57 +87,51 @@
     </div> <!--correctWindow-->
 
     <div id="wrongWindow" style="display: none;">
-        <div class='message'>
+        <div class='message'> 
             <span id="wrongVerse"></span>
-            <br>
-            <br>
         </div>
     </div> <!--wrongWindow-->
 
     <div id="scoreWindow" style="display: none;">
-        <p id = "gameOver">Game Over! <button id = "playAgain"> Play Again! </button></p>
-
-        <div class = "score">
-            <span id="correctVerseCount"> </span> Verses Correct,
-            <span id="wrongVerseCount"> </span> Missed
-            <!-- This is to display the score; i.e., "[X] Correct, [Y] Missed" -->
-        </div>
-        <div class = "time">
-            Game Duration: <span id="gameTime"></span>
-            <!-- This is to display the total time it took for the player to complete all of the questions -->
-        </div>
-        <div class = "rank">
-            You are ranked
-            <span id="userRank"></span>
-            out of
-            <span id="totalGames"> </span>
-            total games played.
-            <!-- This shows the rank of the player, i.e. "You are rank [x] out of [y] total games played." -->
-        </div>
-        <div class = "ovScores">
-            Overall Score:
-            <ul id="overallScoreList">
-
-            </ul>
-            <!-- This shows the overall best scores of everyone who has created an account -->
-        </div>
-        <div class = "bestScores">
-            Best Scores:
-            <ul id="userScoreList">
-
-            </ul>
-            <!-- This shows the player's best scores -->
-        </div>
-        <div class = "missed">
-            Verses Missed:
-            <ul id="wrongVerseList">
-
-            </ul>
-            <!-- This shows what verses the player got wrong -->
-        </div>
-
+            <p id = "gameOver">Game Over! </p>
+        <div id="playAgainDiv">    
+            <button id = "playAgain"> Play Again! </button>
+         </div>
+            <div class="flex-container">
+                <div class="flex-containerDiv1">
+                    <div class = "score">
+                        <span id="correctVerseCount"> </span> Verses Correct,
+                        <span id="wrongVerseCount"> </span> Missed
+                        <!-- This is to display the score; i.e., "[X] Correct, [Y] Missed" -->
+                    </div>
+                    <div class = "time">
+                        Game Duration: <span id="gameTime"></span>
+                        <!-- This is to display the total time it took for the player to complete all of the questions -->
+                    </div>
+                    <div class = "missed">
+                        Verses Missed:
+                        <ul id="wrongVerseList">
+                        </ul>
+                        <!-- This shows what verses the player got wrong -->
+                    </div>
+                </div><!--flex-containerDiv1-->
+                <div class="flex-containerDiv1">
+                    <div class = "rank">
+                    You are ranked x out of x total games played.
+                    <!-- This shows the rank of the player, i.e. "You are rank [x] out of [y] total games played." -->
+                    </div>
+                    <div class = "bestScores">
+                        Best Scores:
+                        <!-- This shows the player's best scores -->
+                    </div>
+                    <div class = "ovScores">
+                        Overall Score:
+                        <!-- This shows the overall best scores of everyone who has created an account -->
+                    </div>
+                </div><!--flexcontainerDiv1-->
+            </div>   <!--flexcontainer-->
     </div> <!--scoreWindow-->
-
 </div><!--Container div-->
+<div class="creaters">  Game built by: Quincy University 2019 Seniors - Michelle Ehrenreich, Emily Entrup, Jacob Abell, and Madeline Deitrich</div>
 </body>
 </html>
